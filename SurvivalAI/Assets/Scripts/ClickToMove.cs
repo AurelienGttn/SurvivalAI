@@ -5,11 +5,13 @@ using UnityEngine.AI;
 
 public class ClickToMove : MonoBehaviour {
 
-    private NavMeshAgent navMeshAgent;
+    private NavMeshAgent agent;
+    private Worker worker;
 
 	// Use this for initialization
 	void Start () {
-        navMeshAgent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<NavMeshAgent>();
+        worker = GetComponent<Worker>();
 	}
 	
 	// Update is called once per frame
@@ -20,8 +22,17 @@ public class ClickToMove : MonoBehaviour {
         if (Input.GetMouseButtonDown(0)) {
             if (Physics.Raycast(ray, out hit))
             {
-                navMeshAgent.destination = hit.point;
+                agent.destination = hit.point;
             }
+        }
+
+        // if the worker is arrived, change its state
+        Debug.Log("distToArrival" + Vector3.Distance(agent.destination, agent.transform.position));
+        Debug.Log("stopDistance" + agent.stoppingDistance);
+        if (Vector3.Distance(agent.destination, agent.transform.position) <= agent.stoppingDistance)
+        {
+            Debug.Log("here");
+            worker.UpdateState(agent.destination);
         }
 	}
 }

@@ -9,11 +9,12 @@ public class MapGenerator : MonoBehaviour {
     [Range(0, 1)] public float outlinePercent;
     public Transform navmeshFloor;
 
-    public Transform treePrefab1;
-    public Transform treePrefab2;
+    public Transform treePrefab;
     public int treeCount;
     public Transform bushPrefab;
     public int bushCount;
+    public Transform rockPrefab;
+    public int rockCount;
     
     List<Coord> allTileCoords;
     Queue<Coord> shuffledTileCoords;
@@ -71,11 +72,7 @@ public class MapGenerator : MonoBehaviour {
             }
 
             Vector3 obstaclePosition = CoordToPosition(randomCoord.x, randomCoord.y);
-            Transform newTree;
-            //if (Random.Range(0f, 1f) < 0.5f)
-            //    newTree = Instantiate(treePrefab1, obstaclePosition + Vector3.up * 0.75f, Quaternion.identity) as Transform;
-            //else
-                newTree = Instantiate(treePrefab2, obstaclePosition + Vector3.up * 0.75f, Quaternion.identity) as Transform;
+            Transform newTree = Instantiate(treePrefab, obstaclePosition + Vector3.up * 0.75f, Quaternion.identity) as Transform;
             newTree.parent = mapHolder;
         }
 
@@ -92,6 +89,21 @@ public class MapGenerator : MonoBehaviour {
             Vector3 obstaclePosition = CoordToPosition(randomCoord.x, randomCoord.y);
             Transform newBush = Instantiate(bushPrefab, obstaclePosition + Vector3.up * 0.5f, Quaternion.identity) as Transform;
             newBush.parent = mapHolder;
+        }
+
+        // Rock
+        for (int i = 0; i < rockCount; i++)
+        {
+            Coord randomCoord = GetRandomCoord();
+            // Make sure they don't go in the center
+            while (randomCoord.x > Mathf.Floor(mapSize.x / 2) - 5 && randomCoord.x < Mathf.Floor(mapSize.x / 2) + 5
+                && randomCoord.y > Mathf.Floor(mapSize.y / 2) - 5 && randomCoord.y < Mathf.Floor(mapSize.y / 2) + 5)
+            {
+                randomCoord = GetRandomCoord();
+            }
+            Vector3 obstaclePosition = CoordToPosition(randomCoord.x, randomCoord.y);
+            Transform newRock = Instantiate(rockPrefab, obstaclePosition, Quaternion.identity) as Transform;
+            newRock.parent = mapHolder;
         }
 
         navmeshFloor.localScale = new Vector3(mapSize.x, mapSize.y, 1);
