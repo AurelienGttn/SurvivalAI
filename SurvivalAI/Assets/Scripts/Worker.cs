@@ -1,32 +1,64 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Worker : MonoBehaviour {
 
-    [SerializeField] private int maxResources = 3;
-    private float woodGatheringTime = 2.0f, stoneGatheringTime = 2.0f;
-    private bool isIdle, isGathering, isWalking;
+    private NavMeshAgent agent;
+    [SerializeField] private int maxResources = 5;
+    private float GatheringTime = 3.0f;
+    private bool isIdle, isGathering, isWalkingToResource, isWalkingToStorage;
 
+    private Transform resourceToGather;
+    private ResourceFinder resourceFinder;
 
-	// Use this for initialization
 	void Start () {
         isIdle = true;
         isGathering = false;
-        isWalking = false;
+        isWalkingToResource = false;
+        isWalkingToStorage = false;
+
+        resourceFinder = GetComponentInChildren<ResourceFinder>();
+        agent = GetComponent<NavMeshAgent>();
 	}
 	
-	// Update is called once per frame
 	void Update () {
-		
+        if (!isGathering)
+        {
+            if (Input.GetKeyDown("w"))
+            {
+                WalkToResource("Wood");
+            }
+            else if (Input.GetKeyDown("r"))
+            {
+                WalkToResource("Rock");
+            }
+            else if (Input.GetKeyDown("b"))
+            {
+                WalkToResource("Berry");
+            }
+        }
+        if (isWalkingToResource == true && Vector3.Distance(agent.destination, agent.transform.position) <= agent.stoppingDistance)
+        {
+            isWalkingToResource = false;
+            isGathering = true;
+            StartCoroutine(GatherResource());
+        }
 	}
 
-    public void UpdateState(Vector3 targetPosition)
+
+    private void WalkToResource(string resourceType)
     {
-        // Check what is the obstacle on the destination tile
-        // If it's a resource, enter gathering state
-        isWalking = false;
-        isGathering = true;
-        Debug.Log("arrived");
+        isWalkingToResource = true;
+        resourceToGather = resourceFinder.FindClosest(resourceType);
+        agent.destination = resourceToGather.position;
+    }
+
+    private IEnumerator GatherResource()
+    {
+        yield return new WaitForSeconds(GatheringTime);
+        Debug.Log("Got " + maxResources +" resources");
+        isGathering = false;
     }
 }

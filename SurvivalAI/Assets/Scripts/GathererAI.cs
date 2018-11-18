@@ -2,7 +2,8 @@
 //using System.Collections.Generic;
 //using UnityEngine;
 
-//public class GathererAI : MonoBehaviour {
+//public class GathererAI : MonoBehaviour
+//{
 
 //    private enum State
 //    {
@@ -12,12 +13,12 @@
 //        MovingToStorage,
 //    }
 
-//    // private GameObject unit;
+//    private GameObject worker;
 //    private State state;
 
 //    private void Awake()
 //    {
-//        unit = gameObject.GetComponent<IUnit>();
+//        worker = gameObject.GetComponent<Worker>();
 //        state = State.Idle;
 //    }
 //}

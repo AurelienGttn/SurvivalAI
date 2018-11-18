@@ -27,12 +27,9 @@ public class ClickToMove : MonoBehaviour {
         }
 
         // if the worker is arrived, change its state
-        Debug.Log("distToArrival" + Vector3.Distance(agent.destination, agent.transform.position));
-        Debug.Log("stopDistance" + agent.stoppingDistance);
         if (Vector3.Distance(agent.destination, agent.transform.position) <= agent.stoppingDistance)
         {
             Debug.Log("here");
-            worker.UpdateState(agent.destination);
         }
 	}
 }
