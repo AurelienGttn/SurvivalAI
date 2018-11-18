@@ -1,9 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
 
     [SerializeField] private float speed;
+
+    private void Start()
+    {
+    }
+
     void Update()
     {
         var x = Input.GetAxis("Horizontal") * Time.deltaTime * speed;

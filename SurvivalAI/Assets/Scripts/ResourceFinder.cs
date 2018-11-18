@@ -11,8 +11,8 @@ public class ResourceFinder : MonoBehaviour {
     private void Update()
     {
         trees = GameObject.FindGameObjectsWithTag("Wood");
-        rocks = GameObject.FindGameObjectsWithTag("Rock");
-        berries = GameObject.FindGameObjectsWithTag("Berry");
+        rocks = GameObject.FindGameObjectsWithTag("Stone");
+        berries = GameObject.FindGameObjectsWithTag("Food");
     }
 
     public Transform FindClosest(string resourceType)
@@ -35,7 +35,7 @@ public class ResourceFinder : MonoBehaviour {
                 }
             }
         }
-        else if (resourceType == "Rock")
+        else if (resourceType == "Stone")
         {
             for (int i = 0; i < rocks.Length; i++)
             {
@@ -49,7 +49,7 @@ public class ResourceFinder : MonoBehaviour {
                 }
             }
         }
-        else if (resourceType == "Berry")
+        else if (resourceType == "Food")
         {
             for (int i = 0; i < berries.Length; i++)
             {
@@ -72,7 +72,7 @@ public class ResourceFinder : MonoBehaviour {
         return trees;
     }
 
-    public GameObject[] getRocks()
+    public GameObject[] getStones()
     {
         return rocks;
     }

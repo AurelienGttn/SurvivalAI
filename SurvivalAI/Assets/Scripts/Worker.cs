@@ -6,59 +6,147 @@ using UnityEngine.AI;
 public class Worker : MonoBehaviour {
 
     private NavMeshAgent agent;
+    private NavMeshObstacle obstacle;
     [SerializeField] private int maxResources = 5;
+    private int resourcesCarried;
     private float GatheringTime = 3.0f;
-    private bool isIdle, isGathering, isWalkingToResource, isWalkingToStorage;
-
-    private Transform resourceToGather;
+    
     private ResourceFinder resourceFinder;
+    private StorageFinder storageFinder;
+    private ResourceManager resourceManager;
 
-	void Start () {
-        isIdle = true;
-        isGathering = false;
-        isWalkingToResource = false;
-        isWalkingToStorage = false;
+    public enum State
+    {
+        Idle,
+        Gathering,
+        WalkingToResource,
+        WalkingToWarehouse
+    }
 
-        resourceFinder = GetComponentInChildren<ResourceFinder>();
+    public State state;
+
+    private enum Resource
+    {
+        Wood,
+        Stone,
+        Food
+    }
+
+    private Resource? currentlyGathering = null;
+    public string currentResource;
+
+    void Start () {
+        state = State.Idle;
+
+        resourceFinder = GetComponent<ResourceFinder>();
+        storageFinder = GetComponent<StorageFinder>();
+        resourceManager = FindObjectOfType<ResourceManager>();
         agent = GetComponent<NavMeshAgent>();
+        agent.avoidancePriority = Random.Range(1, 99);
+        agent.enabled = false;
+        obstacle = GetComponent<NavMeshObstacle>();
+        obstacle.enabled = true;
 	}
 	
 	void Update () {
-        if (!isGathering)
+        // Cancel current action
+        if (Input.GetKeyDown("x"))
+        {
+            state = State.Idle;
+            currentlyGathering = null;
+            agent.destination = transform.position;
+        }
+
+        // Select resource to gather
+        if (state == State.Idle)
         {
             if (Input.GetKeyDown("w"))
             {
-                WalkToResource("Wood");
+                currentlyGathering = Resource.Wood;
             }
-            else if (Input.GetKeyDown("r"))
+            else if (Input.GetKeyDown("s"))
             {
-                WalkToResource("Rock");
+                currentlyGathering = Resource.Stone;
             }
-            else if (Input.GetKeyDown("b"))
+            else if (Input.GetKeyDown("f"))
             {
-                WalkToResource("Berry");
+                currentlyGathering = Resource.Food;
+            }
+
+            if (currentlyGathering != null)
+            {
+                currentResource = currentlyGathering.ToString();
+                WalkToResource(currentResource);
             }
         }
-        if (isWalkingToResource == true && Vector3.Distance(agent.destination, agent.transform.position) <= agent.stoppingDistance)
+
+        // if arrived at resource, start gathering
+        if (state == State.WalkingToResource)
         {
-            isWalkingToResource = false;
-            isGathering = true;
-            StartCoroutine(GatherResource());
+            if (Vector3.Distance(agent.destination, agent.transform.position) <= agent.stoppingDistance)
+            {
+                StartCoroutine(GatherResource());
+            }
+            else
+            {
+                WalkToResource(currentResource);
+            }
         }
-	}
+
+        // if arrived at warehouse, deposit resource
+        if (state == State.WalkingToWarehouse)
+        {
+            if (Vector3.Distance(agent.destination, agent.transform.position) <= agent.stoppingDistance)
+            {
+                StartCoroutine(DepositResource());
+            }
+            else
+            {
+                WalkToWarehouse();
+            }
+        }
+
+    }
 
 
     private void WalkToResource(string resourceType)
     {
-        isWalkingToResource = true;
-        resourceToGather = resourceFinder.FindClosest(resourceType);
+        obstacle.enabled = false;
+        Transform resourceToGather = resourceFinder.FindClosest(resourceType);
+        agent.enabled = true;
         agent.destination = resourceToGather.position;
+        state = State.WalkingToResource;
     }
 
     private IEnumerator GatherResource()
     {
+        agent.enabled = false;
+        state = State.Gathering;
+        obstacle.enabled = true;
         yield return new WaitForSeconds(GatheringTime);
-        Debug.Log("Got " + maxResources +" resources");
-        isGathering = false;
+        resourcesCarried += maxResources;
+        Debug.Log("Harvested " + resourcesCarried + " " + currentResource);
+        WalkToWarehouse();
+    }
+
+    private void WalkToWarehouse()
+    {
+        obstacle.enabled = false;
+        Transform warehouse = storageFinder.FindClosest();
+        agent.enabled = true;
+        agent.destination = warehouse.position;
+        state = State.WalkingToWarehouse;
+    }
+
+    private IEnumerator DepositResource()
+    {
+        agent.enabled = false;
+        yield return new WaitForSeconds(1.0f);
+        obstacle.enabled = true;
+        state = State.Idle;
+        resourceManager.AddResource(currentResource, resourcesCarried);
+        Debug.Log("Deposit " + resourcesCarried + " " + currentResource);
+        resourcesCarried = 0;
+        WalkToResource(currentResource);
     }
 }
