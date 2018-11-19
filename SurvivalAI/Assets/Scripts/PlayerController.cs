@@ -4,18 +4,24 @@ using UnityEngine.AI;
 public class PlayerController : MonoBehaviour
 {
 
-    [SerializeField] private float speed;
+    [SerializeField] private float movementSpeed = 5;
+    private Animator animator;
 
     private void Start()
     {
+        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        var x = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
-        var z = Input.GetAxis("Vertical") * Time.deltaTime * speed;
 
-        transform.Translate(x, 0, 0);
-        transform.Translate(0, 0, z);
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
+
+        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+        if (movement.sqrMagnitude > 0.1f)
+            transform.rotation = Quaternion.LookRotation(movement);
+
+        transform.Translate(movement * movementSpeed * Time.deltaTime, Space.World);
     }
 }

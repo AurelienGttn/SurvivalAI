@@ -9,6 +9,8 @@ TagManager:
   - Warehouse
   - Stone
   - Food
+  - Enemy
+  - Worker
   layers:
   - Default
   - TransparentFX
