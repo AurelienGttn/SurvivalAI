@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class HealthManager : MonoBehaviour {
 
+    [SerializeField] private ParticleSystem deathAnimation;
     public int health = 100;
-
-    private int currentHealth;
-
-	// Use this for initialization
+    public int currentHealth;
+    
 	void Start ()
         {
         currentHealth = health;
@@ -19,7 +18,9 @@ public class HealthManager : MonoBehaviour {
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
-            Debug.Log("I'm dead");
+            gameObject.GetComponent<Renderer>().enabled = false;
+            ParticleSystem deathAnim = Instantiate(deathAnimation, gameObject.transform);
+            Destroy(gameObject, 1f);
         }
     }
 }

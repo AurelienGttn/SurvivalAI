@@ -7,7 +7,6 @@ public class ResourceManager : MonoBehaviour {
     public int woodAvailable, stoneAvailable, foodAvailable;
     public int woodCapacity, stoneCapacity, foodCapacity;
 
-	// Use this for initialization
 	void Start () {
         woodCapacity = 10;
         stoneCapacity = 10;

@@ -85,6 +85,7 @@ public class Worker : MonoBehaviour {
         {
             if (Vector3.Distance(agent.destination, agent.transform.position) <= agent.stoppingDistance)
             {
+                transform.LookAt(new Vector3(agent.destination.x, transform.position.y, agent.destination.z));
                 StartCoroutine(GatherResource());
             }
             else
@@ -98,6 +99,7 @@ public class Worker : MonoBehaviour {
         {
             if (Vector3.Distance(agent.destination, agent.transform.position) <= agent.stoppingDistance)
             {
+                transform.LookAt(new Vector3(agent.destination.x, transform.position.y, agent.destination.z));
                 StartCoroutine(DepositResource());
             }
             else
@@ -134,7 +136,9 @@ public class Worker : MonoBehaviour {
         obstacle.enabled = false;
         Transform warehouse = storageFinder.FindClosest();
         agent.enabled = true;
-        agent.destination = warehouse.position;
+        Vector3 warehouseClosestBound = (transform.position - warehouse.position).normalized;
+        warehouseClosestBound = warehouseClosestBound * warehouse.localScale.x / 2;
+        agent.destination = warehouseClosestBound;
         state = State.WalkingToWarehouse;
     }
 

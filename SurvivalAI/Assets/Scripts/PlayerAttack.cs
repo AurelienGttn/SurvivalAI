@@ -9,15 +9,13 @@ public class PlayerAttack : MonoBehaviour {
     private Animator animator;
 
     private bool canAttack;
-
-	// Use this for initialization
+    
 	void Start ()
     {
         animator = GetComponent<Animator>();
         canAttack = true;
 	}
 	
-	// Update is called once per frame
 	void Update () {
         if (Input.GetButtonDown("Fire1") && canAttack)
         {
@@ -41,6 +39,7 @@ public class PlayerAttack : MonoBehaviour {
             }
         }
     }
+
     private IEnumerator AttackCooldown()
     {
         yield return new WaitForSeconds(0.5f);
