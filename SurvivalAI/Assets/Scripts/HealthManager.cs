@@ -18,9 +18,12 @@ public class HealthManager : MonoBehaviour {
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
-            gameObject.GetComponent<Renderer>().enabled = false;
-            ParticleSystem deathAnim = Instantiate(deathAnimation, gameObject.transform);
-            Destroy(gameObject, 1f);
+            if (gameObject.GetComponent<Renderer>().enabled)
+            {
+                gameObject.GetComponent<Renderer>().enabled = false;
+                ParticleSystem deathAnim = Instantiate(deathAnimation, gameObject.transform);
+                Destroy(gameObject, 1f);
+            }
         }
     }
 }

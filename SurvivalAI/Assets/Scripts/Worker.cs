@@ -7,6 +7,7 @@ public class Worker : MonoBehaviour {
 
     private NavMeshAgent agent;
     private NavMeshObstacle obstacle;
+    private Animator animator;
     [SerializeField] private int maxResources = 5;
     private int resourcesCarried;
     private float GatheringTime = 3.0f;
@@ -14,6 +15,9 @@ public class Worker : MonoBehaviour {
     private ResourceFinder resourceFinder;
     private StorageFinder storageFinder;
     private ResourceManager resourceManager;
+
+    public GameObject axe;
+    public GameObject pickaxe;
 
     public enum State
     {
@@ -41,11 +45,14 @@ public class Worker : MonoBehaviour {
         resourceFinder = GetComponent<ResourceFinder>();
         storageFinder = GetComponent<StorageFinder>();
         resourceManager = FindObjectOfType<ResourceManager>();
+
         agent = GetComponent<NavMeshAgent>();
         agent.avoidancePriority = Random.Range(1, 99);
         agent.enabled = false;
         obstacle = GetComponent<NavMeshObstacle>();
         obstacle.enabled = true;
+
+        animator = GetComponent<Animator>();
 	}
 	
 	void Update () {
@@ -63,14 +70,20 @@ public class Worker : MonoBehaviour {
             if (Input.GetKeyDown("w"))
             {
                 currentlyGathering = Resource.Wood;
+                axe.SetActive(true);
+                pickaxe.SetActive(false);
             }
             else if (Input.GetKeyDown("s"))
             {
                 currentlyGathering = Resource.Stone;
+                axe.SetActive(false);
+                pickaxe.SetActive(true);
             }
             else if (Input.GetKeyDown("f"))
             {
                 currentlyGathering = Resource.Food;
+                axe.SetActive(false);
+                pickaxe.SetActive(false);
             }
 
             if (currentlyGathering != null)
@@ -122,12 +135,14 @@ public class Worker : MonoBehaviour {
 
     private IEnumerator GatherResource()
     {
+        animator.SetBool("isGathering", true);
         agent.enabled = false;
         state = State.Gathering;
         obstacle.enabled = true;
         yield return new WaitForSeconds(GatheringTime);
         resourcesCarried += maxResources;
         Debug.Log("Harvested " + resourcesCarried + " " + currentResource);
+        animator.SetBool("isGathering", false);
         WalkToWarehouse();
     }
 
@@ -145,8 +160,8 @@ public class Worker : MonoBehaviour {
     private IEnumerator DepositResource()
     {
         agent.enabled = false;
-        yield return new WaitForSeconds(1.0f);
         obstacle.enabled = true;
+        yield return new WaitForSeconds(1.0f);
         state = State.Idle;
         resourceManager.AddResource(currentResource, resourcesCarried);
         Debug.Log("Deposit " + resourcesCarried + " " + currentResource);

@@ -37,12 +37,20 @@ public class EnemyAI : MonoBehaviour {
 
     void FixedUpdate()
     {
-        if (isAttacking)
+        if (animator.GetBool("isAttacking"))
         {
-            if (canAttack)
+            Transform target_temp = CheckAttackRange();
+            if (target_temp != null && target_temp.name == target.name)
             {
-                Attack();
-                CheckEnemyLife();
+                if (canAttack)
+                {
+                    Attack();
+                    CheckEnemyLife();
+                }
+            }
+            else
+            {
+                animator.SetBool("isAttacking", false);
             }
         }
 
@@ -86,11 +94,10 @@ public class EnemyAI : MonoBehaviour {
     }
 
     private void Attack() {
-        isAttacking = true;
+        animator.SetBool("isAttacking", true);
         agent.enabled = false;
         obstacle.enabled = true;
         canAttack = false;
-        animator.Play("Attack");
         enemyHealth.TakeDamage(damage);
         StartCoroutine(AttackCooldown());
     }
@@ -106,7 +113,7 @@ public class EnemyAI : MonoBehaviour {
     {
         if (enemyHealth.currentHealth <= 0)
         {
-            isAttacking = false;
+            animator.SetBool("isAttacking", false);
             target = mainBuilding;
             GetClosestBound();
         }
