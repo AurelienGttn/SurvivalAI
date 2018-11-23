@@ -9,14 +9,6 @@ public class PlaceableBuilding : MonoBehaviour {
 
     private bool isSelected;
 
-    private void OnGUI()
-    {
-        if(isSelected)
-        {
-            GUI.Button(new Rect(100, 200, 100, 30), name);
-        }
-    }
-
     void OnTriggerEnter(Collider c)
     {
         if(c.tag == "Building")

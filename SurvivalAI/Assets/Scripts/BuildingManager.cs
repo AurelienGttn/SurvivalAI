@@ -17,11 +17,8 @@ public class BuildingManager : MonoBehaviour {
         
     }
 
-    private void OnGUI()
+    public void OnButtonSetBuilding(int ID)
     {
-        for (int i = 0; i < buildings.Length; i++)
-        {
-            buildingPlacement.SetItem(buildings[i]);
-        }
+        buildingPlacement.SetItem(buildings[ID]);
     }
 }
