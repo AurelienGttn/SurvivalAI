@@ -16,8 +16,8 @@ public class Worker : MonoBehaviour {
     private StorageFinder storageFinder;
     private ResourceManager resourceManager;
 
-    public GameObject axe;
-    public GameObject pickaxe;
+    [SerializeField] private GameObject axe;
+    [SerializeField] private GameObject pickaxe;
 
     public enum State
     {
@@ -61,6 +61,8 @@ public class Worker : MonoBehaviour {
         {
             state = State.Idle;
             currentlyGathering = null;
+            obstacle.enabled = false;
+            agent.enabled = true;
             agent.destination = transform.position;
         }
 
@@ -141,7 +143,6 @@ public class Worker : MonoBehaviour {
         obstacle.enabled = true;
         yield return new WaitForSeconds(GatheringTime);
         resourcesCarried += maxResources;
-        Debug.Log("Harvested " + resourcesCarried + " " + currentResource);
         animator.SetBool("isGathering", false);
         WalkToWarehouse();
     }
@@ -164,7 +165,6 @@ public class Worker : MonoBehaviour {
         yield return new WaitForSeconds(1.0f);
         state = State.Idle;
         resourceManager.AddResource(currentResource, resourcesCarried);
-        Debug.Log("Deposit " + resourcesCarried + " " + currentResource);
         resourcesCarried = 0;
         WalkToResource(currentResource);
     }
