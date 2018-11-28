@@ -8,6 +8,10 @@ public class ResourceFinder : MonoBehaviour {
     private GameObject[] rocks;
     private GameObject[] berries;
 
+    private void Awake()
+    {
+    }
+    
     private void Update()
     {
         trees = GameObject.FindGameObjectsWithTag("Wood");
@@ -15,13 +19,13 @@ public class ResourceFinder : MonoBehaviour {
         berries = GameObject.FindGameObjectsWithTag("Food");
     }
 
-    public Transform FindClosest(string resourceType)
+    public Transform FindClosest(ResourceTypes resourceType)
     {
         Transform closestResource = null;
         float closestDistance = Mathf.Infinity;
         Vector3 currentPosition = transform.position;
 
-        if (resourceType == "Wood")
+        if (resourceType == ResourceTypes.Wood)
         {
             for (int i = 0; i < trees.Length; i++)
             {
@@ -35,7 +39,7 @@ public class ResourceFinder : MonoBehaviour {
                 }
             }
         }
-        else if (resourceType == "Stone")
+        else if (resourceType == ResourceTypes.Stone)
         {
             for (int i = 0; i < rocks.Length; i++)
             {
@@ -49,7 +53,7 @@ public class ResourceFinder : MonoBehaviour {
                 }
             }
         }
-        else if (resourceType == "Food")
+        else if (resourceType == ResourceTypes.Food)
         {
             for (int i = 0; i < berries.Length; i++)
             {
@@ -65,20 +69,5 @@ public class ResourceFinder : MonoBehaviour {
         }
 
         return closestResource;
-    }
-
-    public GameObject[] getTrees()
-    {
-        return trees;
-    }
-
-    public GameObject[] getStones()
-    {
-        return rocks;
-    }
-
-    public GameObject[] getBerries()
-    {
-        return berries;
     }
 }

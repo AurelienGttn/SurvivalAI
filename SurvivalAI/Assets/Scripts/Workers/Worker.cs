@@ -28,16 +28,7 @@ public class Worker : MonoBehaviour {
     }
 
     public State state;
-
-    private enum Resource
-    {
-        Wood,
-        Stone,
-        Food
-    }
-
-    private Resource? currentlyGathering = null;
-    public string currentResource;
+    public ResourceTypes currentlyGathering = ResourceTypes.None;
 
     void Start () {
         state = State.Idle;
@@ -60,7 +51,7 @@ public class Worker : MonoBehaviour {
         if (Input.GetKeyDown("x"))
         {
             state = State.Idle;
-            currentlyGathering = null;
+            currentlyGathering = ResourceTypes.None;
             obstacle.enabled = false;
             agent.enabled = true;
             agent.destination = transform.position;
@@ -71,27 +62,26 @@ public class Worker : MonoBehaviour {
         {
             if (Input.GetKeyDown("w"))
             {
-                currentlyGathering = Resource.Wood;
+                currentlyGathering = ResourceTypes.Wood;
                 axe.SetActive(true);
                 pickaxe.SetActive(false);
             }
             else if (Input.GetKeyDown("s"))
             {
-                currentlyGathering = Resource.Stone;
+                currentlyGathering = ResourceTypes.Stone;
                 axe.SetActive(false);
                 pickaxe.SetActive(true);
             }
             else if (Input.GetKeyDown("f"))
             {
-                currentlyGathering = Resource.Food;
+                currentlyGathering = ResourceTypes.Food;
                 axe.SetActive(false);
                 pickaxe.SetActive(false);
             }
 
-            if (currentlyGathering != null)
+            if (currentlyGathering != ResourceTypes.None)
             {
-                currentResource = currentlyGathering.ToString();
-                WalkToResource(currentResource);
+                WalkToResource(currentlyGathering);
             }
         }
 
@@ -105,7 +95,7 @@ public class Worker : MonoBehaviour {
             }
             else
             {
-                WalkToResource(currentResource);
+                WalkToResource(currentlyGathering);
             }
         }
 
@@ -126,7 +116,7 @@ public class Worker : MonoBehaviour {
     }
 
 
-    private void WalkToResource(string resourceType)
+    private void WalkToResource(ResourceTypes resourceType)
     {
         obstacle.enabled = false;
         Transform resourceToGather = resourceFinder.FindClosest(resourceType);
@@ -164,8 +154,8 @@ public class Worker : MonoBehaviour {
         obstacle.enabled = true;
         yield return new WaitForSeconds(1.0f);
         state = State.Idle;
-        resourceManager.AddResource(currentResource, resourcesCarried);
+        resourceManager.AddResource(currentlyGathering, resourcesCarried);
         resourcesCarried = 0;
-        WalkToResource(currentResource);
+        WalkToResource(currentlyGathering);
     }
 }

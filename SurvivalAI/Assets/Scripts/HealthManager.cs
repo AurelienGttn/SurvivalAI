@@ -13,7 +13,8 @@ public class HealthManager : MonoBehaviour {
 	void Start ()
     {
         currentHealth = health;
-        healthBar.maxValue = health;
+        if(healthBar != null)
+            healthBar.maxValue = health;
 	}
 
     public void TakeDamage(int damage)
@@ -25,7 +26,7 @@ public class HealthManager : MonoBehaviour {
             if (gameObject.GetComponent<Renderer>().enabled)
             {
                 gameObject.GetComponent<Renderer>().enabled = false;
-                ParticleSystem deathAnim = Instantiate(deathAnimation, gameObject.transform);
+                Instantiate(deathAnimation, gameObject.transform);
                 Destroy(gameObject, 1f);
             }
         }
