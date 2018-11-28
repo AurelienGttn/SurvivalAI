@@ -1,0 +1,25 @@
+tree("Root")
+	fallback
+		tree("Rest")
+		tree("GatherResources")
+
+tree("Rest")
+	sequence
+		IsTired
+		WalkToMainBuilding
+		IsArrivedAtDestination
+		RestAtMainBuilding
+		IsRested
+
+tree("GatherResources")
+	while not HasEnoughResources
+		sequence
+			ChooseResource
+			ChooseTool
+			WalkToClosestResource
+			IsArrivedAtDestination
+			GatherResource
+			WaitForGatheringEnd
+			WalkToClosestWarehouse
+			IsArrivedAtDestination
+			DepositResources

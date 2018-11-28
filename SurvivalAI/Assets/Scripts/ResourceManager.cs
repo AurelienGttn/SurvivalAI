@@ -1,50 +1,72 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+
+public enum ResourceTypes
+{
+    None,
+    Wood,
+    Food,
+    Stone
+}
+
 
 public class ResourceManager : MonoBehaviour {
 
-    public int woodAvailable, stoneAvailable, foodAvailable;
-    public int woodCapacity, stoneCapacity, foodCapacity;
+    public Dictionary<ResourceTypes, int> resourcesAvailable = new Dictionary<ResourceTypes, int>();
+    public Dictionary<ResourceTypes, int> resourcesCapacity = new Dictionary<ResourceTypes, int>();
+    public Dictionary<ResourceTypes, int> resourcesNeeded = new Dictionary<ResourceTypes, int>();
 
-	void Start () {
-        woodCapacity = 10;
-        stoneCapacity = 10;
-        foodCapacity = 10;
+    [SerializeField] private TextMeshProUGUI woodText;
+    [SerializeField] private TextMeshProUGUI stoneText;
+    [SerializeField] private TextMeshProUGUI foodText;
 
-        woodAvailable = 0;
-        stoneAvailable = 0;
-        foodAvailable = 0;
+    void Start () {
+        resourcesAvailable.Add(ResourceTypes.Wood, 0);
+        resourcesAvailable.Add(ResourceTypes.Stone, 0);
+        resourcesAvailable.Add(ResourceTypes.Food, 0);
+
+        resourcesCapacity.Add(ResourceTypes.Wood, 1000);
+        resourcesCapacity.Add(ResourceTypes.Stone, 1000);
+        resourcesCapacity.Add(ResourceTypes.Food, 1000);
+
+        resourcesNeeded.Add(ResourceTypes.Wood, 700);
+        resourcesNeeded.Add(ResourceTypes.Stone, 300);
+        resourcesNeeded.Add(ResourceTypes.Food, 300);
 	}
 
-    public void AddResource(string resourceType, int resourceQuantity)
+    private void Update()
     {
-        if (resourceType == "Wood")
-            woodAvailable += resourceQuantity;
-        else if (resourceType == "Stone")
-            stoneAvailable += resourceQuantity;
-        else if (resourceType == "Food")
-            foodAvailable += resourceQuantity;
-
-        Debug.Log("wood = " + woodAvailable);
-        Debug.Log("stone = " + stoneAvailable);
-        Debug.Log("food = " + foodAvailable);
+        woodText.text = resourcesAvailable[ResourceTypes.Wood].ToString();
+        stoneText.text = resourcesAvailable[ResourceTypes.Stone].ToString();
+        foodText.text = resourcesAvailable[ResourceTypes.Food].ToString();
     }
 
-    public void RemoveResource(string resourceType, int resourceQuantity)
+    public void AddResource(ResourceTypes resourceType, int resourceQuantity)
     {
-        if (resourceType == "Wood")
-            woodAvailable -= resourceQuantity;
-        else if (resourceType == "Stone")
-            stoneAvailable -= resourceQuantity;
-        else if (resourceType == "Food")
-            foodAvailable -= resourceQuantity;
+        if (resourceType == ResourceTypes.Wood)
+            resourcesAvailable[ResourceTypes.Wood] += resourceQuantity;
+        else if (resourceType == ResourceTypes.Stone)
+            resourcesAvailable[ResourceTypes.Stone] += resourceQuantity;
+        else if (resourceType == ResourceTypes.Food)
+            resourcesAvailable[ResourceTypes.Food] += resourceQuantity;
+    }
+
+    public void RemoveResource(ResourceTypes resourceType, int resourceQuantity)
+    {
+        if (resourceType == ResourceTypes.Wood)
+            resourcesAvailable[ResourceTypes.Wood] -= resourceQuantity;
+        else if (resourceType == ResourceTypes.Stone)
+            resourcesAvailable[ResourceTypes.Stone] -= resourceQuantity;
+        else if (resourceType == ResourceTypes.Food)
+            resourcesAvailable[ResourceTypes.Food] -= resourceQuantity;
     }
 
     public void UpgradeCapacity(int capacityIncrease)
     {
-        woodCapacity += capacityIncrease;
-        stoneCapacity += capacityIncrease;
-        foodCapacity += capacityIncrease;
+        resourcesCapacity[ResourceTypes.Wood] += capacityIncrease;
+        resourcesCapacity[ResourceTypes.Stone] += capacityIncrease;
+        resourcesCapacity[ResourceTypes.Food] += capacityIncrease;
     }
 }
