@@ -276,6 +276,7 @@ GameObject:
   - component: {fileID: 95954285404393028}
   - component: {fileID: 114133525619730944}
   - component: {fileID: 114045598371799226}
+  - component: {fileID: 114054403545448828}
   m_Layer: 9
   m_Name: Worker
   m_TagString: Worker
@@ -421,7 +422,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1785519770190304}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.3, y: 1, z: 2.2}
+  m_LocalPosition: {x: 28.9, y: 1, z: -5.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4412702485834278}
@@ -787,15 +788,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxResources: 5
+  resourcesCarried: 0
   currentlyGathering: 0
-  currentResource: 
   axe: {fileID: 1872292376962306}
   pickaxe: {fileID: 1257749925320418}
   mainBuilding: {fileID: 0}
   energy: {fileID: 114398335854711600}
+  heroDetector: {fileID: 0}
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 2048
+--- !u!114 &114054403545448828
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1785519770190304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a4cd1e9f0b5e74e93dc41e14ec71d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114110008919606942
 MonoBehaviour:
   m_ObjectHideFlags: 1

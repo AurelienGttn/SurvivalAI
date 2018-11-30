@@ -19,11 +19,10 @@ public class WorkerBT : MonoBehaviour {
     private Animator animator;
 
     // Gathering properties
-    [SerializeField] private int maxResources = 5;
-    private int resourcesCarried;
+    public int maxResources = 5;
+    public int resourcesCarried;
     private float GatheringTime = 3.0f;
     public ResourceTypes currentlyGathering = ResourceTypes.None;
-    public string currentResource;
     private ResourceTypes highestPriorityResource;
 
     // Tools for gathering
@@ -43,8 +42,8 @@ public class WorkerBT : MonoBehaviour {
 
     // Hero/Enemy stuff
     private Transform hero;
-    private SphereCollider heroDetector;
-    [SerializeField] private LayerMask enemyLayerMask;
+    public SphereCollider heroDetector;
+    public LayerMask enemyLayerMask;
 
 
     #region Unity callbacks
@@ -82,30 +81,52 @@ public class WorkerBT : MonoBehaviour {
     }
     #endregion
 
-    #region Global checks
-    // Wait some time so the agent can arrive at its destination
+    #region State machine checks
     [Task]
-    void IsArrivedAtDestination()
+    bool IsThreatened()
     {
-        path = new NavMeshPath();
-        if (agent.CalculatePath(agent.destination, path) && agent.pathStatus == NavMeshPathStatus.PathComplete)
+        return animator.GetBool("IsThreatened");
+    }
+
+    [Task]
+    bool IsWalking()
+    {
+        return animator.GetBool("IsWalking");
+    }
+    
+    [Task]
+    bool IsWalkingToResource()
+    {
+        if (!animator.GetBool("IsFleeing"))
         {
-            estimatedTimeUntilArrival = agent.remainingDistance / agent.speed;
-            behaviourTree.Wait(estimatedTimeUntilArrival + 1f);
-            transform.LookAt(new Vector3(agent.destination.x, transform.position.y, agent.destination.z));
+            if (animator.GetBool("IsGathering") && animator.GetBool("IsWalking") && !animator.GetBool("IsFull"))
+            {
+                return true;
+            }
         }
+        return false;
+    }
+    
+    [Task]
+    bool IsGathering()
+    {
+        return animator.GetBool("IsGathering");
+    }
+
+    [Task]
+    bool IsFull()
+    {
+        return animator.GetBool("IsFull");
+    }
+    
+    [Task]
+    bool IsTired()
+    {
+        return animator.GetBool("IsTired");
     }
     #endregion
 
     #region Enemy reactions
-    [Task]
-    void EnemyNearby()
-    {
-        Collider[] enemyCol = Physics.OverlapSphere(transform.position, heroDetector.radius, enemyLayerMask);
-
-        Task.current.Complete(enemyCol.Length > 0) ;
-    }
-
     [Task]
     void RunToHero()
     {
@@ -118,24 +139,6 @@ public class WorkerBT : MonoBehaviour {
     #endregion
 
     #region Resting actions
-    [Task]
-    bool IsRested()
-    {
-        if (energy.value > 95)
-        {
-            isResting = false;
-        }
-        return true;
-    }
-
-    [Task]
-    bool IsTired()
-    {
-        if (!isResting)
-            return energy.value < 20;
-        return true;
-    }
-
     [Task]
     void WalkToMainBuilding()
     {
@@ -155,7 +158,8 @@ public class WorkerBT : MonoBehaviour {
         isResting = true;
         transform.localScale = Vector3.zero;
         obstacle.enabled = false;
-        energy.value += 5f;
+        energy.value += 1f;
+        animator.SetFloat("Energy", energy.value);
 
         Task.current.Succeed();
     }
@@ -224,12 +228,11 @@ public class WorkerBT : MonoBehaviour {
     [Task]
     void WalkToClosestResource()
     {
-        obstacle.enabled = false;
         Transform resourceToGather = resourceFinder.FindClosest(currentlyGathering);
+        obstacle.enabled = false;
         agent.enabled = true;
         agent.destination = resourceToGather.position;
-
-        Task.current.Complete(agent.pathStatus == NavMeshPathStatus.PathComplete);
+        Task.current.Succeed();
     }
 
     [Task]
@@ -238,16 +241,11 @@ public class WorkerBT : MonoBehaviour {
         animator.SetBool("IsGathering", true);
         agent.enabled = false;
         obstacle.enabled = true;
-        energy.value -= 5;
-        resourcesCarried += maxResources;
+        energy.value -= 1;
+        animator.SetFloat("Energy", energy.value);
+        resourcesCarried += 1;
 
         Task.current.Succeed();
-    }
-
-    [Task]
-    void WaitForGatheringEnd()
-    {
-        behaviourTree.Wait(GatheringTime);
     }
 
     [Task]
