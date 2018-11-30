@@ -11,6 +11,8 @@ TagManager:
   - Food
   - Enemy
   - Worker
+  - FxTemporaire
+  - Building
   layers:
   - Default
   - TransparentFX
@@ -22,7 +24,7 @@ TagManager:
   - 
   - PostProcessing
   - Player
-  - 
+  - Building
   - 
   - 
   - 

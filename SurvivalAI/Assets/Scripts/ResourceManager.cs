@@ -23,9 +23,9 @@ public class ResourceManager : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI foodText;
 
     void Start () {
-        resourcesAvailable.Add(ResourceTypes.Wood, 0);
-        resourcesAvailable.Add(ResourceTypes.Stone, 0);
-        resourcesAvailable.Add(ResourceTypes.Food, 0);
+        resourcesAvailable.Add(ResourceTypes.Wood, 200);
+        resourcesAvailable.Add(ResourceTypes.Stone, 200);
+        resourcesAvailable.Add(ResourceTypes.Food, 200);
 
         resourcesCapacity.Add(ResourceTypes.Wood, 1000);
         resourcesCapacity.Add(ResourceTypes.Stone, 1000);
