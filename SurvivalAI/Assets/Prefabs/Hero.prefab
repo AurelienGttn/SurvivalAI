@@ -502,6 +502,7 @@ MonoBehaviour:
   deathAnimation: {fileID: 19800000, guid: ada5d62ffe762ce4fbccc70dcdbc9022, type: 2}
   health: 100
   currentHealth: 0
+  healthBar: {fileID: 0}
 --- !u!136 &136066627748109292
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -524,7 +525,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 8
   m_Acceleration: 8
   avoidancePriority: 0
   m_AngularSpeed: 120

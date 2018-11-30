@@ -6,51 +6,118 @@ using UnityEngine.UI;
 using Panda;
 
 public class WorkerBT : MonoBehaviour {
+    // Behaviour tree
     private PandaBehaviour behaviourTree;
+
+    // Navigation
     private NavMeshAgent agent;
     private NavMeshObstacle obstacle;
+    private NavMeshPath path;
+    private float estimatedTimeUntilArrival;
+
+    // Animation
     private Animator animator;
+
+    // Gathering properties
     [SerializeField] private int maxResources = 5;
     private int resourcesCarried;
     private float GatheringTime = 3.0f;
+    public ResourceTypes currentlyGathering = ResourceTypes.None;
+    public string currentResource;
+    private ResourceTypes highestPriorityResource;
+
+    // Tools for gathering
+    [SerializeField] private GameObject axe;
+    [SerializeField] private GameObject pickaxe;
+
+    // Resting
     private bool isResting = false;
     [SerializeField] private Transform mainBuilding;
+    [SerializeField] private Slider energy;
 
+    // Finders and managers
     private ResourceFinder resourceFinder;
     private StorageFinder storageFinder;
     private ResourceManager resourceManager;
     private WorkersManager workersManager;
 
-    [SerializeField] private GameObject axe;
-    [SerializeField] private GameObject pickaxe;
-    [SerializeField] private Slider energy;
+    // Hero/Enemy stuff
+    private Transform hero;
+    private SphereCollider heroDetector;
+    [SerializeField] private LayerMask enemyLayerMask;
 
-    public ResourceTypes currentlyGathering = ResourceTypes.None;
-    public string currentResource;
-    private ResourceTypes highestPriorityResource;
 
-    private NavMeshPath path;
-    private float estimatedTimeUntilArrival;
-
+    #region Unity callbacks
     void Start()
     {
         behaviourTree = GetComponent<PandaBehaviour>();
+
+        // Finders and managers
         resourceFinder = GetComponent<ResourceFinder>();
         storageFinder = GetComponent<StorageFinder>();
         resourceManager = FindObjectOfType<ResourceManager>();
         workersManager = FindObjectOfType<WorkersManager>();
         workersManager.workers.Add(this);
 
+        // Navigation
         agent = GetComponent<NavMeshAgent>();
         agent.avoidancePriority = Random.Range(1, 99);
         agent.enabled = false;
         obstacle = GetComponent<NavMeshObstacle>();
         obstacle.enabled = true;
-        energy.value = 40;
+
+        energy.value = 100;
 
         animator = GetComponent<Animator>();
+
+        // Hero stuff
+        hero = GameObject.FindGameObjectWithTag("Player").transform;
+        heroDetector = GetComponentInChildren<SphereCollider>();
     }
 
+    private void OnDrawGizmos()
+    {
+        if (agent != null && agent.destination != Vector3.zero)
+            Gizmos.DrawWireCube(agent.destination, Vector3.one);
+    }
+    #endregion
+
+    #region Global checks
+    // Wait some time so the agent can arrive at its destination
+    [Task]
+    void IsArrivedAtDestination()
+    {
+        path = new NavMeshPath();
+        if (agent.CalculatePath(agent.destination, path) && agent.pathStatus == NavMeshPathStatus.PathComplete)
+        {
+            estimatedTimeUntilArrival = agent.remainingDistance / agent.speed;
+            behaviourTree.Wait(estimatedTimeUntilArrival + 1f);
+            transform.LookAt(new Vector3(agent.destination.x, transform.position.y, agent.destination.z));
+        }
+    }
+    #endregion
+
+    #region Enemy reactions
+    [Task]
+    void EnemyNearby()
+    {
+        Collider[] enemyCol = Physics.OverlapSphere(transform.position, heroDetector.radius, enemyLayerMask);
+
+        Task.current.Complete(enemyCol.Length > 0) ;
+    }
+
+    [Task]
+    void RunToHero()
+    {
+        obstacle.enabled = false;
+        agent.enabled = true;
+        agent.destination = hero.position;
+
+        Task.current.Succeed();
+    }
+    #endregion
+
+    #region Resting actions
     [Task]
     bool IsRested()
     {
@@ -81,18 +148,6 @@ public class WorkerBT : MonoBehaviour {
         Task.current.Succeed();
     }
 
-    // Check if the agent arrived at its destination
-    [Task]
-    void IsArrivedAtDestination()
-    {
-        path = new NavMeshPath();
-        if (agent.CalculatePath(agent.destination, path) && agent.pathStatus == NavMeshPathStatus.PathComplete)
-        {
-            estimatedTimeUntilArrival = agent.remainingDistance / agent.speed;
-            behaviourTree.Wait(estimatedTimeUntilArrival + 1f);
-        }
-    }
-
     // Get some energy back when resting at main building
     [Task]
     void RestAtMainBuilding()
@@ -105,7 +160,9 @@ public class WorkerBT : MonoBehaviour {
 
         Task.current.Succeed();
     }
+    #endregion
 
+    #region Gathering actions
     // Check if any resource is needed
     [Task]
     bool HasEnoughResources()
@@ -222,10 +279,5 @@ public class WorkerBT : MonoBehaviour {
 
         Task.current.Succeed();
     }
-
-    private void OnDrawGizmos()
-    {
-        if (agent != null && agent.destination != Vector3.zero)
-            Gizmos.DrawWireCube(agent.destination, Vector3.one);
-    }
+    #endregion
 }

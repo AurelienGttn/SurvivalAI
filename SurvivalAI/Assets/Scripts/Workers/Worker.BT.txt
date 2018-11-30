@@ -1,7 +1,14 @@
 tree("Root")
 	fallback
+		tree("Flee")
 		tree("Rest")
 		tree("GatherResources")
+
+tree("Flee")
+	sequence
+		EnemyNearby
+		RunToHero
+		IsArrivedAtDestination
 
 tree("Rest")
 	sequence
@@ -18,6 +25,7 @@ tree("GatherResources")
 			ChooseTool
 			WalkToClosestResource
 			IsArrivedAtDestination
+			not EnemyNearby
 			GatherResource
 			WaitForGatheringEnd
 			WalkToClosestWarehouse

@@ -4,19 +4,35 @@ using UnityEngine;
 
 public class ResourceFinder : MonoBehaviour {
 
-    private GameObject[] trees;
-    private GameObject[] rocks;
-    private GameObject[] berries;
+    private GameObject[] treeArray;
+    private List<Transform> trees = new List<Transform>();
+    private GameObject[] rockArray;
+    private List<Transform> rocks = new List<Transform>();
+    private GameObject[] berryArray;
+    private List<Transform> berries = new List<Transform>();
 
-    private void Awake()
+    private void Start()
     {
+        treeArray = GameObject.FindGameObjectsWithTag("Wood");
+        for (int i = 0; i < treeArray.Length; i++)
+        {
+            trees.Add(treeArray[i].transform);
+        }
+        rockArray = GameObject.FindGameObjectsWithTag("Stone");
+        for (int i = 0; i < rockArray.Length; i++)
+        {
+            rocks.Add(rockArray[i].transform);
+        }
+        berryArray = GameObject.FindGameObjectsWithTag("Food");
+        for (int i = 0; i < berryArray.Length; i++)
+        {
+            berries.Add(berryArray[i].transform);
+        }
     }
     
     private void Update()
     {
-        trees = GameObject.FindGameObjectsWithTag("Wood");
-        rocks = GameObject.FindGameObjectsWithTag("Stone");
-        berries = GameObject.FindGameObjectsWithTag("Food");
+
     }
 
     public Transform FindClosest(ResourceTypes resourceType)
@@ -24,12 +40,12 @@ public class ResourceFinder : MonoBehaviour {
         Transform closestResource = null;
         float closestDistance = Mathf.Infinity;
         Vector3 currentPosition = transform.position;
+        Debug.Log("current pos = " + currentPosition);
 
         if (resourceType == ResourceTypes.Wood)
         {
-            for (int i = 0; i < trees.Length; i++)
+            foreach (Transform tree in trees)
             {
-                Transform tree = trees[i].transform;
                 Vector3 directionToTarget = tree.position - currentPosition;
                 float dSqrToTarget = directionToTarget.sqrMagnitude;
                 if (dSqrToTarget < closestDistance)
@@ -41,9 +57,8 @@ public class ResourceFinder : MonoBehaviour {
         }
         else if (resourceType == ResourceTypes.Stone)
         {
-            for (int i = 0; i < rocks.Length; i++)
+            foreach (Transform rock in rocks)
             {
-                Transform rock = rocks[i].transform;
                 Vector3 directionToTarget = rock.position - currentPosition;
                 float dSqrToTarget = directionToTarget.sqrMagnitude;
                 if (dSqrToTarget < closestDistance)
@@ -55,9 +70,8 @@ public class ResourceFinder : MonoBehaviour {
         }
         else if (resourceType == ResourceTypes.Food)
         {
-            for (int i = 0; i < berries.Length; i++)
+            foreach (Transform berry in berries)
             {
-                Transform berry = berries[i].transform;
                 Vector3 directionToTarget = berry.position - currentPosition;
                 float dSqrToTarget = directionToTarget.sqrMagnitude;
                 if (dSqrToTarget < closestDistance)
