@@ -8,6 +8,7 @@ public class MapGenerator : MonoBehaviour {
     public Vector2 mapSize;
     public Transform tilePrefab;
     public Transform navmeshFloor;
+    private NavMeshSurface surface;
 
     [SerializeField] private int freeSpaceFromCenter = 10;
     
@@ -26,6 +27,8 @@ public class MapGenerator : MonoBehaviour {
     private void Awake()
     {
         GenerateMap();
+        surface = GetComponent<NavMeshSurface>();
+        surface.BuildNavMesh();
     }
 
     public void GenerateMap()
@@ -55,7 +58,8 @@ public class MapGenerator : MonoBehaviour {
         ground.localScale = new Vector3(mapSize.x, mapSize.y, 1);
         ground.parent = mapHolder;
         
-        /* ###### TOO HEAVY ###### //
+        /* 
+        // ###### TOO HEAVY ###### //
         // Create the base map
                 
                 for (int x = 0; x < mapSize.x; x++)
@@ -68,8 +72,8 @@ public class MapGenerator : MonoBehaviour {
                         newTile.parent = mapHolder;
                     }
                 }
-        ###### TOO HEAVY ###### */
-
+        ###### TOO HEAVY ###### 
+        */
 
         // Place resources
         // Wood

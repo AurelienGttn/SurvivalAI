@@ -156,7 +156,6 @@ public class WorkerBT : MonoBehaviour {
         transform.localScale = Vector3.zero;
         obstacle.enabled = false;
         energy.value += 5f;
-        Debug.Log("rested");
 
         Task.current.Succeed();
     }
@@ -187,12 +186,10 @@ public class WorkerBT : MonoBehaviour {
             int currentWorkers = workersManager.workersOccupation[resource.Key];
             // Add 1 to avoid dividing by 0
             float new_resourcePriority = resource.Value / (currentWorkers + 1);
-            Debug.Log(resource.Key.ToString() + "resource prio = " + new_resourcePriority);
             if (new_resourcePriority > resourcePriority)
             {
                 highestPriorityResource = resource.Key;
                 resourcePriority = new_resourcePriority;
-                Debug.Log(highestPriorityResource.ToString());
             }
         }
         currentlyGathering = highestPriorityResource;
