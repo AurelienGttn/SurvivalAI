@@ -3,159 +3,49 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Worker : MonoBehaviour {
-
+public class Worker : MonoBehaviour
+{
     private NavMeshAgent agent;
-    private NavMeshObstacle obstacle;
     private Animator animator;
-    [SerializeField] private int maxResources = 5;
-    private int resourcesCarried;
-    private float GatheringTime = 3.0f;
-    
-    private ResourceFinder resourceFinder;
-    private StorageFinder storageFinder;
-    private ResourceManager resourceManager;
+    private WorkerBT workerBT;
 
-    [SerializeField] private GameObject axe;
-    [SerializeField] private GameObject pickaxe;
-
-    public enum State
+    private void Start()
     {
-        Idle,
-        Gathering,
-        WalkingToResource,
-        WalkingToWarehouse
-    }
-
-    public State state;
-    public ResourceTypes currentlyGathering = ResourceTypes.None;
-
-    void Start () {
-        state = State.Idle;
-
-        resourceFinder = GetComponent<ResourceFinder>();
-        storageFinder = GetComponent<StorageFinder>();
-        resourceManager = FindObjectOfType<ResourceManager>();
-
         agent = GetComponent<NavMeshAgent>();
-        agent.avoidancePriority = Random.Range(1, 99);
-        agent.enabled = false;
-        obstacle = GetComponent<NavMeshObstacle>();
-        obstacle.enabled = true;
-
         animator = GetComponent<Animator>();
-	}
-	
-	void Update () {
-        // Cancel current action
-        if (Input.GetKeyDown("x"))
-        {
-            state = State.Idle;
-            currentlyGathering = ResourceTypes.None;
-            obstacle.enabled = false;
-            agent.enabled = true;
-            agent.destination = transform.position;
-        }
-
-        // Select resource to gather
-        if (state == State.Idle)
-        {
-            if (Input.GetKeyDown("w"))
-            {
-                currentlyGathering = ResourceTypes.Wood;
-                axe.SetActive(true);
-                pickaxe.SetActive(false);
-            }
-            else if (Input.GetKeyDown("s"))
-            {
-                currentlyGathering = ResourceTypes.Stone;
-                axe.SetActive(false);
-                pickaxe.SetActive(true);
-            }
-            else if (Input.GetKeyDown("f"))
-            {
-                currentlyGathering = ResourceTypes.Food;
-                axe.SetActive(false);
-                pickaxe.SetActive(false);
-            }
-
-            if (currentlyGathering != ResourceTypes.None)
-            {
-                WalkToResource(currentlyGathering);
-            }
-        }
-
-        // if arrived at resource, start gathering
-        if (state == State.WalkingToResource)
-        {
-            if (Vector3.Distance(agent.destination, agent.transform.position) <= agent.stoppingDistance)
-            {
-                transform.LookAt(new Vector3(agent.destination.x, transform.position.y, agent.destination.z));
-                StartCoroutine(GatherResource());
-            }
-            else
-            {
-                WalkToResource(currentlyGathering);
-            }
-        }
-
-        // if arrived at warehouse, deposit resource
-        if (state == State.WalkingToWarehouse)
-        {
-            if (Vector3.Distance(agent.destination, agent.transform.position) <= agent.stoppingDistance)
-            {
-                transform.LookAt(new Vector3(agent.destination.x, transform.position.y, agent.destination.z));
-                StartCoroutine(DepositResource());
-            }
-            else
-            {
-                WalkToWarehouse();
-            }
-        }
-
+        workerBT = GetComponent<WorkerBT>();
     }
 
-
-    private void WalkToResource(ResourceTypes resourceType)
+    private void Update()
     {
-        obstacle.enabled = false;
-        Transform resourceToGather = resourceFinder.FindClosest(resourceType);
-        agent.enabled = true;
-        agent.destination = resourceToGather.position;
-        state = State.WalkingToResource;
-    }
+        ///////////// CHECK CURRENT ACTION /////////////
 
-    private IEnumerator GatherResource()
-    {
-        animator.SetBool("isGathering", true);
-        agent.enabled = false;
-        state = State.Gathering;
-        obstacle.enabled = true;
-        yield return new WaitForSeconds(GatheringTime);
-        resourcesCarried += maxResources;
-        animator.SetBool("isGathering", false);
-        WalkToWarehouse();
-    }
+        // Check if worker is trying to gather something
+        animator.SetBool("IsGathering", workerBT.currentlyGathering != ResourceTypes.None);
 
-    private void WalkToWarehouse()
-    {
-        obstacle.enabled = false;
-        Transform warehouse = storageFinder.FindClosest();
-        agent.enabled = true;
-        Vector3 warehouseClosestBound = (transform.position - warehouse.position).normalized;
-        warehouseClosestBound = warehouseClosestBound * warehouse.localScale.x / 2;
-        agent.destination = warehouseClosestBound;
-        state = State.WalkingToWarehouse;
-    }
+        // Check if worker has reached its target
+        animator.SetBool("IsWalking", Vector3.Distance(agent.destination, transform.position) >= agent.stoppingDistance + 0.5);
 
-    private IEnumerator DepositResource()
-    {
-        agent.enabled = false;
-        obstacle.enabled = true;
-        yield return new WaitForSeconds(1.0f);
-        state = State.Idle;
-        resourceManager.AddResource(currentlyGathering, resourcesCarried);
-        resourcesCarried = 0;
-        WalkToResource(currentlyGathering);
+        // Check if worker's inventory is full
+        animator.SetBool("IsFull", workerBT.resourcesCarried >= workerBT.maxResources);
+
+        // Check if enemy is nearby
+        Collider[] enemyCol = Physics.OverlapSphere(transform.position, workerBT.heroDetector.radius, workerBT.enemyLayerMask);
+        animator.SetBool("IsThreatened", enemyCol.Length > 0);
+
+        // Check if worker is tired
+        animator.SetBool("IsResting", animator.GetFloat("Energy") < 95);
+        if (animator.GetFloat("Energy") < 20)
+        {
+            animator.SetBool("IsTired", true);
+        }
+        if (animator.GetFloat("Energy") >= 20 && !animator.GetBool("IsResting"))
+        {
+            animator.SetBool("IsTired", false);
+        }
+
+        // Check if building is ready to be built
+        // Retrieve ready-to-be-built building list
+        // If its length is > 0, set CanBuild to true
     }
 }

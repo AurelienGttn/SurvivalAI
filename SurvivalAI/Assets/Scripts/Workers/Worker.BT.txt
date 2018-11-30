@@ -1,25 +1,74 @@
 tree("Root")
 	fallback
+		tree("Flee")
 		tree("Rest")
 		tree("GatherResources")
+
+
+tree("Flee")
+	sequence
+		IsThreatened
+		RunToHero
+
 
 tree("Rest")
 	sequence
 		IsTired
+		fallback
+			tree("WalkToMainBuilding")
+			tree("RestAtMainBuilding")
+
+tree("WalkToMainBuilding")
+	sequence
 		WalkToMainBuilding
-		IsArrivedAtDestination
+		IsWalking
+	
+tree("RestAtMainBuilding")
+	sequence
+		not IsWalking
 		RestAtMainBuilding
-		IsRested
+
 
 tree("GatherResources")
-	while not HasEnoughResources
-		sequence
-			ChooseResource
-			ChooseTool
-			WalkToClosestResource
-			IsArrivedAtDestination
-			GatherResource
-			WaitForGatheringEnd
-			WalkToClosestWarehouse
-			IsArrivedAtDestination
-			DepositResources
+	sequence
+		not HasEnoughResources
+		fallback
+			tree("ChooseResource")
+			tree("WalkToResource")
+			tree("CollectResource")
+			tree("WalkToWarehouse")
+			tree("DepositResource")
+
+
+tree("ChooseResource")
+	sequence
+		not IsGathering
+		ChooseResource
+		ChooseTool
+
+tree("WalkToResource")
+	sequence
+		IsGathering
+		not IsFull
+		WalkToClosestResource
+		IsWalking
+
+tree("CollectResource")
+	sequence
+		IsGathering
+		not IsWalking
+		not IsFull
+		GatherResource
+
+tree("WalkToWarehouse")
+	sequence
+		IsGathering
+		IsFull
+		WalkToClosestWarehouse
+		IsWalking
+
+tree("DepositResource")
+	sequence
+		IsFull
+		not IsWalking
+		DepositResources

@@ -6,69 +6,139 @@ using UnityEngine.UI;
 using Panda;
 
 public class WorkerBT : MonoBehaviour {
+    // Behaviour tree
     private PandaBehaviour behaviourTree;
+
+    // Navigation
     private NavMeshAgent agent;
     private NavMeshObstacle obstacle;
+    private NavMeshPath path;
+    private float estimatedTimeUntilArrival;
+
+    // Animation
     private Animator animator;
-    [SerializeField] private int maxResources = 5;
-    private int resourcesCarried;
+
+    // Gathering properties
+    public int maxResources = 5;
+    public int resourcesCarried;
     private float GatheringTime = 3.0f;
+    public ResourceTypes currentlyGathering = ResourceTypes.None;
+    private ResourceTypes highestPriorityResource;
+
+    // Tools for gathering
+    [SerializeField] private GameObject axe;
+    [SerializeField] private GameObject pickaxe;
+
+    // Resting
     private bool isResting = false;
     [SerializeField] private Transform mainBuilding;
+    [SerializeField] private Slider energy;
 
+    // Finders and managers
     private ResourceFinder resourceFinder;
     private StorageFinder storageFinder;
     private ResourceManager resourceManager;
     private WorkersManager workersManager;
 
-    [SerializeField] private GameObject axe;
-    [SerializeField] private GameObject pickaxe;
-    [SerializeField] private Slider energy;
+    // Hero/Enemy stuff
+    private Transform hero;
+    public SphereCollider heroDetector;
+    public LayerMask enemyLayerMask;
 
-    public ResourceTypes currentlyGathering = ResourceTypes.None;
-    public string currentResource;
-    private ResourceTypes highestPriorityResource;
 
-    private NavMeshPath path;
-    private float estimatedTimeUntilArrival;
-
+    #region Unity callbacks
     void Start()
     {
         behaviourTree = GetComponent<PandaBehaviour>();
+
+        // Finders and managers
         resourceFinder = GetComponent<ResourceFinder>();
         storageFinder = GetComponent<StorageFinder>();
         resourceManager = FindObjectOfType<ResourceManager>();
         workersManager = FindObjectOfType<WorkersManager>();
         workersManager.workers.Add(this);
 
+        // Navigation
         agent = GetComponent<NavMeshAgent>();
         agent.avoidancePriority = Random.Range(1, 99);
         agent.enabled = false;
         obstacle = GetComponent<NavMeshObstacle>();
         obstacle.enabled = true;
-        energy.value = 40;
+
+        energy.value = 100;
 
         animator = GetComponent<Animator>();
+
+        // Hero stuff
+        hero = GameObject.FindGameObjectWithTag("Player").transform;
+        heroDetector = GetComponentInChildren<SphereCollider>();
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (agent != null && agent.destination != Vector3.zero)
+            Gizmos.DrawWireCube(agent.destination, Vector3.one);
+    }
+    #endregion
+
+    #region State machine checks
+    [Task]
+    bool IsThreatened()
+    {
+        return animator.GetBool("IsThreatened");
     }
 
     [Task]
-    bool IsRested()
+    bool IsWalking()
     {
-        if (energy.value > 95)
+        return animator.GetBool("IsWalking");
+    }
+    
+    [Task]
+    bool IsWalkingToResource()
+    {
+        if (!animator.GetBool("IsFleeing"))
         {
-            isResting = false;
+            if (animator.GetBool("IsGathering") && animator.GetBool("IsWalking") && !animator.GetBool("IsFull"))
+            {
+                return true;
+            }
         }
-        return true;
+        return false;
+    }
+    
+    [Task]
+    bool IsGathering()
+    {
+        return animator.GetBool("IsGathering");
     }
 
+    [Task]
+    bool IsFull()
+    {
+        return animator.GetBool("IsFull");
+    }
+    
     [Task]
     bool IsTired()
     {
-        if (!isResting)
-            return energy.value < 20;
-        return true;
+        return animator.GetBool("IsTired");
     }
+    #endregion
 
+    #region Enemy reactions
+    [Task]
+    void RunToHero()
+    {
+        obstacle.enabled = false;
+        agent.enabled = true;
+        agent.destination = hero.position;
+
+        Task.current.Succeed();
+    }
+    #endregion
+
+    #region Resting actions
     [Task]
     void WalkToMainBuilding()
     {
@@ -81,18 +151,6 @@ public class WorkerBT : MonoBehaviour {
         Task.current.Succeed();
     }
 
-    // Check if the agent arrived at its destination
-    [Task]
-    void IsArrivedAtDestination()
-    {
-        path = new NavMeshPath();
-        if (agent.CalculatePath(agent.destination, path) && agent.pathStatus == NavMeshPathStatus.PathComplete)
-        {
-            estimatedTimeUntilArrival = agent.remainingDistance / agent.speed;
-            behaviourTree.Wait(estimatedTimeUntilArrival + 1f);
-        }
-    }
-
     // Get some energy back when resting at main building
     [Task]
     void RestAtMainBuilding()
@@ -100,12 +158,14 @@ public class WorkerBT : MonoBehaviour {
         isResting = true;
         transform.localScale = Vector3.zero;
         obstacle.enabled = false;
-        energy.value += 5f;
-        Debug.Log("rested");
+        energy.value += 1f;
+        animator.SetFloat("Energy", energy.value);
 
         Task.current.Succeed();
     }
+    #endregion
 
+    #region Gathering actions
     // Check if any resource is needed
     [Task]
     bool HasEnoughResources()
@@ -130,12 +190,10 @@ public class WorkerBT : MonoBehaviour {
             int currentWorkers = workersManager.workersOccupation[resource.Key];
             // Add 1 to avoid dividing by 0
             float new_resourcePriority = resource.Value / (currentWorkers + 1);
-            Debug.Log(resource.Key.ToString() + "resource prio = " + new_resourcePriority);
             if (new_resourcePriority > resourcePriority)
             {
                 highestPriorityResource = resource.Key;
                 resourcePriority = new_resourcePriority;
-                Debug.Log(highestPriorityResource.ToString());
             }
         }
         currentlyGathering = highestPriorityResource;
@@ -170,12 +228,11 @@ public class WorkerBT : MonoBehaviour {
     [Task]
     void WalkToClosestResource()
     {
-        obstacle.enabled = false;
         Transform resourceToGather = resourceFinder.FindClosest(currentlyGathering);
+        obstacle.enabled = false;
         agent.enabled = true;
         agent.destination = resourceToGather.position;
-
-        Task.current.Complete(agent.pathStatus == NavMeshPathStatus.PathComplete);
+        Task.current.Succeed();
     }
 
     [Task]
@@ -184,16 +241,11 @@ public class WorkerBT : MonoBehaviour {
         animator.SetBool("IsGathering", true);
         agent.enabled = false;
         obstacle.enabled = true;
-        energy.value -= 5;
-        resourcesCarried += maxResources;
+        energy.value -= 1;
+        animator.SetFloat("Energy", energy.value);
+        resourcesCarried += 1;
 
         Task.current.Succeed();
-    }
-
-    [Task]
-    void WaitForGatheringEnd()
-    {
-        behaviourTree.Wait(GatheringTime);
     }
 
     [Task]
@@ -222,10 +274,5 @@ public class WorkerBT : MonoBehaviour {
 
         Task.current.Succeed();
     }
-
-    private void OnDrawGizmos()
-    {
-        if (agent != null && agent.destination != Vector3.zero)
-            Gizmos.DrawWireCube(agent.destination, Vector3.one);
-    }
+    #endregion
 }

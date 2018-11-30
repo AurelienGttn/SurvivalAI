@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class MapGenerator : MonoBehaviour {
 
-    public Transform tilePrefab;
     public Vector2 mapSize;
-    [Range(0, 1)] public float outlinePercent;
+    public Transform tilePrefab;
     public Transform navmeshFloor;
+    private NavMeshSurface surface;
 
+    [SerializeField] private int freeSpaceFromCenter = 10;
+    
     public Transform treePrefab;
     public int treeCount;
     public Transform bushPrefab;
@@ -21,9 +24,11 @@ public class MapGenerator : MonoBehaviour {
 
     public int seed;
 
-    private void Start()
+    private void Awake()
     {
         GenerateMap();
+        surface = GetComponent<NavMeshSurface>();
+        surface.BuildNavMesh();
     }
 
     public void GenerateMap()
@@ -47,17 +52,28 @@ public class MapGenerator : MonoBehaviour {
         Transform mapHolder = new GameObject(holderName).transform;
         mapHolder.parent = transform;
 
+        // Create ground with only one tile
+        // The grid is still here but it's lighter for the CPU
+        Transform ground = Instantiate(tilePrefab, Vector3.zero, Quaternion.Euler(Vector3.right * 90));
+        ground.localScale = new Vector3(mapSize.x, mapSize.y, 1);
+        ground.parent = mapHolder;
+        
+        /* 
+        // ###### TOO HEAVY ###### //
         // Create the base map
-        for (int x = 0; x < mapSize.x; x++)
-        {
-            for (int y = 0; y < mapSize.y; y++)
-            {
-                Vector3 tilePosition = CoordToPosition(x, y);
-                Transform newTile = Instantiate(tilePrefab, tilePosition, Quaternion.Euler(Vector3.right * 90)) as Transform;
-                newTile.localScale = Vector3.one * (1 - outlinePercent);
-                newTile.parent = mapHolder;
-            }
-        }
+                
+                for (int x = 0; x < mapSize.x; x++)
+                {
+                    for (int y = 0; y < mapSize.y; y++)
+                    {
+                        Vector3 tilePosition = CoordToPosition(x, y);
+                        Transform newTile = Instantiate(tilePrefab, tilePosition, Quaternion.Euler(Vector3.right * 90)) as Transform;
+                        newTile.localScale = Vector3.one;
+                        newTile.parent = mapHolder;
+                    }
+                }
+        ###### TOO HEAVY ###### 
+        */
 
         // Place resources
         // Wood
@@ -65,8 +81,8 @@ public class MapGenerator : MonoBehaviour {
         {
             Coord randomCoord = GetRandomCoord();
             // Make sure they don't go in the center
-            while (randomCoord.x > Mathf.Floor(mapSize.x / 2) - 5 && randomCoord.x < Mathf.Floor(mapSize.x / 2) + 5
-                && randomCoord.y > Mathf.Floor(mapSize.y / 2) - 5 && randomCoord.y < Mathf.Floor(mapSize.y / 2) + 5)
+            while (randomCoord.x > Mathf.Floor(mapSize.x / 2) - freeSpaceFromCenter && randomCoord.x < Mathf.Floor(mapSize.x / 2) + freeSpaceFromCenter
+                && randomCoord.y > Mathf.Floor(mapSize.y / 2) - freeSpaceFromCenter && randomCoord.y < Mathf.Floor(mapSize.y / 2) + freeSpaceFromCenter)
             {
                 randomCoord = GetRandomCoord();
             }
@@ -81,8 +97,8 @@ public class MapGenerator : MonoBehaviour {
         {
             Coord randomCoord = GetRandomCoord();
             // Make sure they don't go in the center
-            while (randomCoord.x > Mathf.Floor(mapSize.x / 2) - 5 && randomCoord.x < Mathf.Floor(mapSize.x / 2) + 5
-                && randomCoord.y > Mathf.Floor(mapSize.y / 2) - 5 && randomCoord.y < Mathf.Floor(mapSize.y / 2) + 5)
+            while (randomCoord.x > Mathf.Floor(mapSize.x / 2) - freeSpaceFromCenter && randomCoord.x < Mathf.Floor(mapSize.x / 2) + freeSpaceFromCenter
+                && randomCoord.y > Mathf.Floor(mapSize.y / 2) - freeSpaceFromCenter && randomCoord.y < Mathf.Floor(mapSize.y / 2) + freeSpaceFromCenter)
             {
                 randomCoord = GetRandomCoord();
             }
@@ -96,8 +112,8 @@ public class MapGenerator : MonoBehaviour {
         {
             Coord randomCoord = GetRandomCoord();
             // Make sure they don't go in the center
-            while (randomCoord.x > Mathf.Floor(mapSize.x / 2) - 5 && randomCoord.x < Mathf.Floor(mapSize.x / 2) + 5
-                && randomCoord.y > Mathf.Floor(mapSize.y / 2) - 5 && randomCoord.y < Mathf.Floor(mapSize.y / 2) + 5)
+            while (randomCoord.x > Mathf.Floor(mapSize.x / 2) - freeSpaceFromCenter && randomCoord.x < Mathf.Floor(mapSize.x / 2) + freeSpaceFromCenter
+                && randomCoord.y > Mathf.Floor(mapSize.y / 2) - freeSpaceFromCenter && randomCoord.y < Mathf.Floor(mapSize.y / 2) + freeSpaceFromCenter)
             {
                 randomCoord = GetRandomCoord();
             }
