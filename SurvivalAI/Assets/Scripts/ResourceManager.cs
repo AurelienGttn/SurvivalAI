@@ -31,9 +31,9 @@ public class ResourceManager : MonoBehaviour {
         resourcesCapacity.Add(ResourceTypes.Stone, 1000);
         resourcesCapacity.Add(ResourceTypes.Food, 1000);
 
-        resourcesNeeded.Add(ResourceTypes.Wood, 700);
-        resourcesNeeded.Add(ResourceTypes.Stone, 300);
-        resourcesNeeded.Add(ResourceTypes.Food, 300);
+        resourcesNeeded.Add(ResourceTypes.Wood, 100);
+        resourcesNeeded.Add(ResourceTypes.Stone, 100);
+        resourcesNeeded.Add(ResourceTypes.Food, 100);
 	}
 
     private void Update()
