@@ -6,29 +6,77 @@ using UnityEngine.UI;
 public class HealthManager : MonoBehaviour {
 
     [SerializeField] private ParticleSystem deathAnimation;
-    public int health = 100;
-    public int currentHealth;
+    public float maxHealth = 100;
+    public float currentHealth;
     [SerializeField] private Slider healthBar;
+    private bool isDead = false;
+
+    private Renderer[] m_renderer;
+
+    private ResourceFinder resourceFinder;
     
 	void Start ()
     {
-        currentHealth = health;
-        if(healthBar != null)
-            healthBar.maxValue = health;
+        if (tag == "Building")
+            currentHealth = 1;
+        else 
+            currentHealth = maxHealth;
+        if (healthBar)
+        {
+            healthBar.maxValue = maxHealth;
+            healthBar.value = currentHealth;
+        }
+
+        m_renderer = GetComponentsInChildren<Renderer>();
+        resourceFinder = FindObjectOfType<ResourceFinder>();
 	}
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        healthBar.value = currentHealth;
+        if (healthBar)
+            healthBar.value = currentHealth;
+
         if (currentHealth <= 0)
         {
-            if (gameObject.GetComponent<Renderer>().enabled)
+            // Check if the animation has already been played
+            if (!isDead)
             {
-                gameObject.GetComponent<Renderer>().enabled = false;
+                foreach (Renderer renderer in m_renderer)
+                {
+                    renderer.enabled = false;
+                }
                 Instantiate(deathAnimation, gameObject.transform);
-                Destroy(gameObject, 1f);
+                Destroy(gameObject, deathAnimation.main.duration);
             }
+            isDead = true;
+
+            // If it is a resource, we need to remove it from
+            // the list of resources so it can't be found anymore
+            if (tag == "Wood")
+            {
+                resourceFinder.trees.Remove(transform);
+            }
+            else if (tag == "Stone")
+            {
+                resourceFinder.rocks.Remove(transform);
+            }
+            else if (tag == "Food")
+            {
+                resourceFinder.berries.Remove(transform);
+            }
+        }
+    }
+
+    public void Heal(float healValue)
+    {
+        currentHealth += healValue;
+        if (healthBar)
+            healthBar.value = currentHealth;
+
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
         }
     }
 }

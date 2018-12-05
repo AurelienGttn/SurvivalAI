@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Worker : MonoBehaviour
+public class WorkerAnimator : MonoBehaviour
 {
     private NavMeshAgent agent;
     private Animator animator;
     private WorkerBT workerBT;
+    private ConstructionManager constructionManager;
 
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         workerBT = GetComponent<WorkerBT>();
+        constructionManager = FindObjectOfType<ConstructionManager>();
     }
 
     private void Update()
@@ -45,7 +47,7 @@ public class Worker : MonoBehaviour
         }
 
         // Check if building is ready to be built
-        // Retrieve ready-to-be-built building list
-        // If its length is > 0, set CanBuild to true
+        animator.SetBool("CanBuild", constructionManager.constructionList.Count > 0);
+        
     }
 }

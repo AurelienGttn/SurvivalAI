@@ -5,11 +5,14 @@ using UnityEngine;
 public class ResourceFinder : MonoBehaviour {
 
     private GameObject[] treeArray;
-    private List<Transform> trees = new List<Transform>();
     private GameObject[] rockArray;
-    private List<Transform> rocks = new List<Transform>();
     private GameObject[] berryArray;
-    private List<Transform> berries = new List<Transform>();
+    [HideInInspector]
+    public List<Transform> trees = new List<Transform>();
+    [HideInInspector]
+    public List<Transform> rocks = new List<Transform>();
+    [HideInInspector]
+    public List<Transform> berries = new List<Transform>();
 
     private void Start()
     {
@@ -40,7 +43,6 @@ public class ResourceFinder : MonoBehaviour {
         Transform closestResource = null;
         float closestDistance = Mathf.Infinity;
         Vector3 currentPosition = transform.position;
-        Debug.Log("current pos = " + currentPosition);
 
         if (resourceType == ResourceTypes.Wood)
         {

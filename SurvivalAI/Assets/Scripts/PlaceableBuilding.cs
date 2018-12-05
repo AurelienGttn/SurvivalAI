@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlaceableBuilding : MonoBehaviour {
 
+    private GameObject buildingsParent;
+
     [HideInInspector]
     public List<Collider> colliders = new List<Collider>();
 
@@ -32,6 +34,9 @@ public class PlaceableBuilding : MonoBehaviour {
 
     private void Start()
     {
+        buildingsParent = GameObject.Find("Buildings");
+        transform.parent = buildingsParent.transform;
+
         attributedWood = 0;
         attributedStone = 0;
         switch (type)

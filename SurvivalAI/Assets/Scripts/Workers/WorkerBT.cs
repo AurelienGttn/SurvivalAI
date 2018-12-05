@@ -6,32 +6,30 @@ using UnityEngine.UI;
 using Panda;
 
 public class WorkerBT : MonoBehaviour {
-    // Behaviour tree
-    private PandaBehaviour behaviourTree;
+
+    // Reproduction
+    [SerializeField] private GameObject workerPrefab;
+    private Transform workersParent;
 
     // Navigation
     private NavMeshAgent agent;
-    private NavMeshObstacle obstacle;
-    private NavMeshPath path;
-    private float estimatedTimeUntilArrival;
 
     // Animation
     private Animator animator;
 
-    // Gathering properties
+    // Gathering parameters
     public int maxResources = 5;
     public int resourcesCarried;
-    private float GatheringTime = 3.0f;
+    private float exactResourcesCarried = 0;
     public ResourceTypes currentlyGathering = ResourceTypes.None;
     private ResourceTypes highestPriorityResource;
-
+    private Transform resourceToGather;
     // Tools for gathering
     [SerializeField] private GameObject axe;
     [SerializeField] private GameObject pickaxe;
 
     // Resting
-    private bool isResting = false;
-    [SerializeField] private Transform mainBuilding;
+    private Transform mainBuilding;
     [SerializeField] private Slider energy;
 
     // Finders and managers
@@ -39,6 +37,7 @@ public class WorkerBT : MonoBehaviour {
     private StorageFinder storageFinder;
     private ResourceManager resourceManager;
     private WorkersManager workersManager;
+    private ConstructionManager constructionManager;
 
     // Hero/Enemy stuff
     private Transform hero;
@@ -49,7 +48,8 @@ public class WorkerBT : MonoBehaviour {
     #region Unity callbacks
     void Start()
     {
-        behaviourTree = GetComponent<PandaBehaviour>();
+        // Reproduction
+        workersParent = GameObject.Find("Workers").transform;
 
         // Finders and managers
         resourceFinder = GetComponent<ResourceFinder>();
@@ -57,14 +57,15 @@ public class WorkerBT : MonoBehaviour {
         resourceManager = FindObjectOfType<ResourceManager>();
         workersManager = FindObjectOfType<WorkersManager>();
         workersManager.workers.Add(this);
+        constructionManager = FindObjectOfType<ConstructionManager>();
 
         // Navigation
         agent = GetComponent<NavMeshAgent>();
         agent.avoidancePriority = Random.Range(1, 99);
-        agent.enabled = false;
-        obstacle = GetComponent<NavMeshObstacle>();
-        obstacle.enabled = true;
+        agent.enabled = true;
 
+        // Resting
+        mainBuilding = GameObject.Find("MainBuilding").transform;
         energy.value = 100;
 
         animator = GetComponent<Animator>();
@@ -74,11 +75,40 @@ public class WorkerBT : MonoBehaviour {
         heroDetector = GetComponentInChildren<SphereCollider>();
     }
 
+    private void Update()
+    {
+        if (agent.hasPath)
+        {
+            transform.LookAt(new Vector3(agent.destination.x, transform.position.y, agent.destination.z));
+        }
+    }
+
     private void OnDrawGizmos()
     {
         if (agent != null && agent.destination != Vector3.zero)
             Gizmos.DrawWireCube(agent.destination, Vector3.one);
     }
+    #endregion
+
+    #region Utility functions
+
+    // Destination is not a point it's an object, and we actually want 
+    // to go to the closest point of this object. We calculate this point
+    // with the normalized distance and the scale of the object.
+    private Vector3 GetClosestBound(Transform target)
+    {
+        Vector3 targetClosestBound = (transform.position - target.position).normalized;
+        targetClosestBound = targetClosestBound * target.localScale.x / 2 + target.position;
+
+        return targetClosestBound;
+    }
+
+    // Create a new worker as a result of mating
+    private void CreateNewWorker()
+    {
+        Instantiate(workerPrefab, new Vector3(3,1,3), Quaternion.identity, workersParent);
+    }
+
     #endregion
 
     #region State machine checks
@@ -93,18 +123,11 @@ public class WorkerBT : MonoBehaviour {
     {
         return animator.GetBool("IsWalking");
     }
-    
+
     [Task]
-    bool IsWalkingToResource()
+    bool CanBuild()
     {
-        if (!animator.GetBool("IsFleeing"))
-        {
-            if (animator.GetBool("IsGathering") && animator.GetBool("IsWalking") && !animator.GetBool("IsFull"))
-            {
-                return true;
-            }
-        }
-        return false;
+        return animator.GetBool("CanBuild");
     }
     
     [Task]
@@ -130,9 +153,10 @@ public class WorkerBT : MonoBehaviour {
     [Task]
     void RunToHero()
     {
-        obstacle.enabled = false;
-        agent.enabled = true;
-        agent.destination = hero.position;
+        if (hero != null)
+        {
+            agent.destination = hero.position;
+        }
 
         Task.current.Succeed();
     }
@@ -142,11 +166,8 @@ public class WorkerBT : MonoBehaviour {
     [Task]
     void WalkToMainBuilding()
     {
-        obstacle.enabled = false;
-        agent.enabled = true;
-        Vector3 closestBound = (transform.position - mainBuilding.position).normalized;
-        closestBound = closestBound * mainBuilding.localScale.x / 2;
-        agent.destination = closestBound;
+        agent.destination = GetClosestBound(mainBuilding);
+        animator.SetBool("IsWalking", Vector3.Distance(agent.destination, transform.position) > agent.stoppingDistance + 0.5);
 
         Task.current.Succeed();
     }
@@ -155,11 +176,20 @@ public class WorkerBT : MonoBehaviour {
     [Task]
     void RestAtMainBuilding()
     {
-        isResting = true;
         transform.localScale = Vector3.zero;
-        obstacle.enabled = false;
         energy.value += 1f;
         animator.SetFloat("Energy", energy.value);
+
+        Task.current.Succeed();
+    }
+
+    [Task]
+    void TryToMate()
+    {
+        if (Random.Range(0, 1) < 1 / (workersManager.workers.Count + 1))
+        {
+            CreateNewWorker();
+        }
 
         Task.current.Succeed();
     }
@@ -187,7 +217,7 @@ public class WorkerBT : MonoBehaviour {
         float resourcePriority = 0;
         foreach (KeyValuePair<ResourceTypes, int> resource in resourceManager.resourcesNeeded)
         {
-            int currentWorkers = workersManager.workersOccupation[resource.Key];
+            int currentWorkers = workersManager.gatheringWorkers[resource.Key];
             // Add 1 to avoid dividing by 0
             float new_resourcePriority = resource.Value / (currentWorkers + 1);
             if (new_resourcePriority > resourcePriority)
@@ -198,7 +228,7 @@ public class WorkerBT : MonoBehaviour {
         }
         currentlyGathering = highestPriorityResource;
         // Add this worker to the worker manager, to update priorities
-        workersManager.workersOccupation[currentlyGathering]++;
+        workersManager.gatheringWorkers[currentlyGathering]++;
 
         Task.current.Complete(currentlyGathering != ResourceTypes.None);
     }
@@ -228,22 +258,29 @@ public class WorkerBT : MonoBehaviour {
     [Task]
     void WalkToClosestResource()
     {
-        Transform resourceToGather = resourceFinder.FindClosest(currentlyGathering);
-        obstacle.enabled = false;
-        agent.enabled = true;
-        agent.destination = resourceToGather.position;
+        resourceToGather = resourceFinder.FindClosest(currentlyGathering);
+        agent.destination = GetClosestBound(resourceToGather);
+        animator.SetBool("IsWalking", Vector3.Distance(agent.destination, transform.position) > agent.stoppingDistance + 0.5);
+
         Task.current.Succeed();
     }
 
     [Task]
     void GatherResource()
     {
+        if (resourceToGather.GetComponent<HealthManager>().currentHealth <= 0)
+        {
+            animator.SetBool("IsGathering", false);
+            Task.current.Fail();
+        }
+
         animator.SetBool("IsGathering", true);
-        agent.enabled = false;
-        obstacle.enabled = true;
-        energy.value -= 1;
+        energy.value -= 0.02f;
         animator.SetFloat("Energy", energy.value);
-        resourcesCarried += 1;
+        // Set it low enough to have several animations
+        exactResourcesCarried += 0.05f;
+        resourcesCarried = (int)Mathf.Floor(exactResourcesCarried);
+        resourceToGather.GetComponent<HealthManager>().TakeDamage(0.05f);
 
         Task.current.Succeed();
     }
@@ -252,12 +289,9 @@ public class WorkerBT : MonoBehaviour {
     void WalkToClosestWarehouse()
     {
         animator.SetBool("IsGathering", false);
-        obstacle.enabled = false;
         Transform warehouse = storageFinder.FindClosest();
-        agent.enabled = true;
-        Vector3 warehouseClosestBound = (transform.position - warehouse.position).normalized;
-        warehouseClosestBound = warehouseClosestBound * warehouse.localScale.x / 2;
-        agent.destination = warehouseClosestBound;
+        agent.destination = GetClosestBound(warehouse);
+        animator.SetBool("IsWalking", Vector3.Distance(agent.destination, transform.position) > agent.stoppingDistance + 0.5);
 
         Task.current.Succeed();
     }
@@ -265,14 +299,53 @@ public class WorkerBT : MonoBehaviour {
     [Task]
     void DepositResources()
     {
-        agent.enabled = false;
-        obstacle.enabled = true;
         resourceManager.AddResource(currentlyGathering, resourcesCarried);
-        workersManager.workersOccupation[currentlyGathering]--;
+        workersManager.gatheringWorkers[currentlyGathering]--;
         currentlyGathering = ResourceTypes.None;
         resourcesCarried = 0;
+        exactResourcesCarried = 0;
 
         Task.current.Succeed();
     }
     #endregion
+
+
+    #region Building actions
+
+    [Task]
+    void CheckBuildingsReady()
+    {
+        Task.current.Complete(constructionManager.constructionList.Count > 0);
+    }
+
+    [Task]
+    void WalkToReadyBuilding()
+    {
+        Transform buildingToBuild = constructionManager.constructionList[0].transform;
+        agent.destination = GetClosestBound(buildingToBuild);
+        workersManager.buildingWorkers++;
+        animator.SetBool("IsWalking", Vector3.Distance(agent.destination, transform.position) > agent.stoppingDistance + 0.5);
+
+        Task.current.Succeed();
+    }
+
+    [Task]
+    void Build()
+    {
+        Transform currentlyBuilding = constructionManager.constructionList[0].transform;
+        animator.SetBool("IsBuilding", true);
+        energy.value -= 0.02f;
+        animator.SetFloat("Energy", energy.value);
+        // Set it low enough to have several animations
+        currentlyBuilding.GetComponent<HealthManager>().Heal(0.05f);
+        if (currentlyBuilding.GetComponent<HealthManager>().currentHealth >= currentlyBuilding.GetComponent<HealthManager>().maxHealth)
+        {
+            animator.SetBool("IsBuilding", false);
+            workersManager.buildingWorkers--;
+        }
+
+        Task.current.Succeed();
+    }
+    #endregion
+    
 }

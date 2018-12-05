@@ -33,7 +33,6 @@ public class PlayerAttack : MonoBehaviour {
         {
             if (col.tag == "Enemy")
             {
-                Debug.Log("enemy hit");
                 HealthManager enemyHealth = col.GetComponent<HealthManager>();
                 enemyHealth.TakeDamage(damage);
             }

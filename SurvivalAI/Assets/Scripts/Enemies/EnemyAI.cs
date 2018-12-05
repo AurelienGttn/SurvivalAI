@@ -21,7 +21,8 @@ public class EnemyAI : MonoBehaviour {
     public Transform target;
     
     void Start () {
-        mainBuilding = GameObject.FindGameObjectWithTag("MainBuilding").transform;
+        if(GameObject.FindGameObjectWithTag("MainBuilding"))
+            mainBuilding = GameObject.FindGameObjectWithTag("MainBuilding").transform;
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         agent.enabled = true;
@@ -37,11 +38,13 @@ public class EnemyAI : MonoBehaviour {
 
     void FixedUpdate()
     {
+        // If there's already a target, check if it's still in range
         if (animator.GetBool("isAttacking"))
         {
             Transform target_temp = CheckAttackRange();
             if (target_temp != null && target_temp.name == target.name)
             {
+                // and attack it if cooldown is up
                 if (canAttack)
                 {
                     Attack();
@@ -149,7 +152,11 @@ public class EnemyAI : MonoBehaviour {
     {
         obstacle.enabled = false;
         agent.enabled = true;
-        Vector3 destinationClosestBound = target.position + (transform.position - target.position).normalized * (target.localScale.x / 2);
+        Vector3 destinationClosestBound = Vector3.zero;
+        if (target != null)
+        {
+            destinationClosestBound = target.position + (transform.position - target.position).normalized * (target.localScale.x / 2);
+        }
         
         return destinationClosestBound;
     }
