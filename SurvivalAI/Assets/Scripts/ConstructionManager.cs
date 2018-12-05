@@ -28,15 +28,13 @@ public class ConstructionManager : MonoBehaviour {
 
     public void attributeResources(GameObject go)
     {
-        while((resourceManager.resourcesAvailable[ResourceTypes.Wood] >= 50) && (go.GetComponent<PlaceableBuilding>().attributedWood <= go.GetComponent<PlaceableBuilding>().neededWood))
+        while((resourceManager.resourcesAvailable[ResourceTypes.Wood] >= 50) && (go.GetComponent<PlaceableBuilding>().attributedWood <= go.GetComponent<PlaceableBuilding>().neededWood - 50))
         {
             attributeWood(go, 50);
-            Debug.Log("WOOOOOOOOOOOD");
         }
-        while((resourceManager.resourcesAvailable[ResourceTypes.Stone] >= 50) && (go.GetComponent<PlaceableBuilding>().attributedStone <= go.GetComponent<PlaceableBuilding>().neededStone))
+        while((resourceManager.resourcesAvailable[ResourceTypes.Stone] >= 50) && (go.GetComponent<PlaceableBuilding>().attributedStone <= go.GetComponent<PlaceableBuilding>().neededStone - 50))
         {
             attributeStone(go, 50);
-            Debug.Log("STOOOOOOOOOOOONE");
         }
 
     }

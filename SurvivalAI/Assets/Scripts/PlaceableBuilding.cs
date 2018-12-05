@@ -41,12 +41,12 @@ public class PlaceableBuilding : MonoBehaviour {
                 neededStone = 200;
                 break;
             case BuildingTypes.Culture:
-                neededWood = 100;
-                neededStone = 50;
+                neededWood = 150;
+                neededStone = 100;
                 break;
             case BuildingTypes.Mine:
-                neededWood = 50;
-                neededStone = 100;
+                neededWood = 100;
+                neededStone = 150;
                 break;
             case BuildingTypes.Entrepot:
                 neededWood = 150;
