@@ -237,14 +237,12 @@ GameObject:
   - component: {fileID: 195802619321693248}
   - component: {fileID: 114312240143106334}
   - component: {fileID: 114110008919606942}
-  - component: {fileID: 208770989634887022}
   - component: {fileID: 136038048706999858}
   - component: {fileID: 114482404566338610}
   - component: {fileID: 95954285404393028}
   - component: {fileID: 114133525619730944}
   - component: {fileID: 114045598371799226}
   - component: {fileID: 114054403545448828}
-  - component: {fileID: 114347545303136360}
   m_Layer: 9
   m_Name: Worker
   m_TagString: Worker
@@ -405,8 +403,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1785519770190304}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 28.9, y: 1, z: -5.3}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.7, y: 1, z: 6.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224385982444462690}
@@ -832,7 +830,6 @@ MonoBehaviour:
   currentlyGathering: 0
   axe: {fileID: 1872292376962306}
   pickaxe: {fileID: 1257749925320418}
-  mainBuilding: {fileID: 0}
   energy: {fileID: 114398335854711600}
   heroDetector: {fileID: 0}
   enemyLayerMask:
@@ -913,6 +910,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e91c0968891fc88428f4509c330b2304, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trees: []
+  rocks: []
+  berries: []
 --- !u!114 &114327188441826424
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -940,17 +940,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114347545303136360
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1785519770190304}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab1ed8190e9b52f4daaede96e3c2eff6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114369044515703248
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1164,21 +1153,6 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 2
---- !u!208 &208770989634887022
-NavMeshObstacle:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1785519770190304}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Shape: 0
-  m_Extents: {x: 0.3, y: 1, z: 0.3}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!222 &222881735879676806
 CanvasRenderer:
   m_ObjectHideFlags: 1

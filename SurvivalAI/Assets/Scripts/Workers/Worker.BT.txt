@@ -18,7 +18,6 @@ tree("Rest")
 		fallback
 			tree("WalkToMainBuilding")
 			tree("RestAtMainBuilding")
-		TryToMate
 
 tree("WalkToMainBuilding")
 	sequence
@@ -29,13 +28,17 @@ tree("RestAtMainBuilding")
 	sequence
 		not IsWalking
 		RestAtMainBuilding
+		TryToMate
 
 
 tree("Build")
 	sequence
+		not IsGathering
 		CanBuild
 		WalkToReadyBuilding
-		Build
+		fallback 
+			IsWalking
+			Build
 
 tree("GatherResources")
 	sequence

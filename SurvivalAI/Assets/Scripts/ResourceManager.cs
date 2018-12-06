@@ -16,22 +16,22 @@ public class ResourceManager : MonoBehaviour {
 
     public Dictionary<ResourceTypes, float> resourcesAvailable = new Dictionary<ResourceTypes, float>();
     public Dictionary<ResourceTypes, float> resourcesCapacity = new Dictionary<ResourceTypes, float>();
-    public Dictionary<ResourceTypes, float> resourcesNeeded = new Dictionary<ResourceTypes, float>();
+    public Dictionary<ResourceTypes, float> resourcesConsumption = new Dictionary<ResourceTypes, float>();
 
     [Header("Wood")]
     [SerializeField] private TextMeshProUGUI woodAvailable;
     [SerializeField] private TextMeshProUGUI woodCapacity;
-    [SerializeField] private TextMeshProUGUI woodNeeded;
+    [SerializeField] private TextMeshProUGUI woodConsumption;
 
     [Header("Stone")]
     [SerializeField] private TextMeshProUGUI stoneAvailable;
     [SerializeField] private TextMeshProUGUI stoneCapacity;
-    [SerializeField] private TextMeshProUGUI stoneNeeded;
+    [SerializeField] private TextMeshProUGUI stoneConsumption;
 
     [Header("Food")]
     [SerializeField] private TextMeshProUGUI foodAvailable;
     [SerializeField] private TextMeshProUGUI foodCapacity;
-    [SerializeField] private TextMeshProUGUI foodNeeded;
+    [SerializeField] private TextMeshProUGUI foodConsumption;
 
     private int workerCount;            // How many active workers are in game
     private int baseConsumption = 20;
@@ -48,8 +48,8 @@ public class ResourceManager : MonoBehaviour {
         resourcesCapacity.Add(ResourceTypes.Wood, 1000);
         resourcesCapacity.Add(ResourceTypes.Stone, 1000);
 
-        resourcesNeeded.Add(ResourceTypes.Wood, 100);
-        resourcesNeeded.Add(ResourceTypes.Stone, 100);
+        resourcesConsumption.Add(ResourceTypes.Wood, 100);
+        resourcesConsumption.Add(ResourceTypes.Stone, 100);
         
 
         // Food consumption is special because it is not needed
@@ -61,7 +61,7 @@ public class ResourceManager : MonoBehaviour {
         // through the game: the more workers you have, the more
         // food each will consume
         workersConsumption = baseConsumption + (int)Mathf.Pow(workerCount, multiplier);
-        resourcesNeeded.Add(ResourceTypes.Food, workersConsumption);
+        resourcesConsumption.Add(ResourceTypes.Food, workersConsumption);
 
         // As food is always needed, the player needs to have some
         // at the very beginning, else he would lose before playing
@@ -75,7 +75,7 @@ public class ResourceManager : MonoBehaviour {
         // Update food consumption
         workerCount = FindObjectOfType<WorkersManager>().workers.Count;
         workersConsumption = 20 + (int)Mathf.Pow(workerCount, 3);
-        resourcesNeeded[ResourceTypes.Food] = workersConsumption;
+        resourcesConsumption[ResourceTypes.Food] = workersConsumption;
 
 
         woodAvailable.text = resourcesAvailable[ResourceTypes.Wood].ToString();
@@ -86,9 +86,9 @@ public class ResourceManager : MonoBehaviour {
         stoneCapacity.text = resourcesCapacity[ResourceTypes.Stone].ToString();
         foodCapacity.text = resourcesCapacity[ResourceTypes.Food].ToString();
 
-        woodNeeded.text = resourcesNeeded[ResourceTypes.Wood].ToString();
-        stoneNeeded.text = resourcesNeeded[ResourceTypes.Stone].ToString();
-        foodNeeded.text = resourcesNeeded[ResourceTypes.Food].ToString();
+        woodConsumption.text = resourcesConsumption[ResourceTypes.Wood].ToString();
+        stoneConsumption.text = resourcesConsumption[ResourceTypes.Stone].ToString();
+        foodConsumption.text = resourcesConsumption[ResourceTypes.Food].ToString();
 
         updateResourcesConsumption();
     }

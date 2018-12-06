@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 208907351939870750}
   - component: {fileID: 114874281200212980}
   - component: {fileID: 136815220819196382}
+  - component: {fileID: 114765262593320808}
   m_Layer: 10
   m_Name: BuildingEntrepot
   m_TagString: Building
@@ -1400,6 +1401,21 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &114765262593320808
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1225587756695606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae5ce37262745fc4f91290c0ba10486e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathAnimation: {fileID: 0}
+  maxHealth: 100
+  currentHealth: 0
+  healthBar: {fileID: 114411826889779896}
 --- !u!114 &114820009208406394
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1442,7 +1458,6 @@ MonoBehaviour:
   type: 3
   isConstructed: 0
   health: 0
-  maxHealth: 0
   normal: {fileID: 2100000, guid: b512e0d266c333c46937efc25702725c, type: 2}
   fade: {fileID: 2100000, guid: b0fa3bb8c96ec7d4480d556f8d5afe15, type: 2}
   attributedWood: 0
@@ -1454,7 +1469,6 @@ MonoBehaviour:
   neededWoodText: {fileID: 114182738665578904}
   neededStoneText: {fileID: 114718493039865610}
   constructUI: {fileID: 223713924496690722}
-  healthBar: {fileID: 1231133505721704}
 --- !u!114 &114994481903728624
 MonoBehaviour:
   m_ObjectHideFlags: 1

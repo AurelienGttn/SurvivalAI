@@ -244,6 +244,8 @@ GameObject:
   - component: {fileID: 136328774529267298}
   - component: {fileID: 208809468133718214}
   - component: {fileID: 114135971035871956}
+  - component: {fileID: 136987017133199726}
+  - component: {fileID: 114006527555233548}
   m_Layer: 18
   m_Name: BuildingHouse
   m_TagString: Building
@@ -489,6 +491,21 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114006527555233548
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1799419318005756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae5ce37262745fc4f91290c0ba10486e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathAnimation: {fileID: 0}
+  maxHealth: 100
+  currentHealth: 0
+  healthBar: {fileID: 114928248909404868}
 --- !u!114 &114006693454932892
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -547,7 +564,6 @@ MonoBehaviour:
   type: 4
   isConstructed: 0
   health: 0
-  maxHealth: 0
   normal: {fileID: 2100000, guid: feba810ead102d645939888a1d50b04e, type: 2}
   fade: {fileID: 2100000, guid: 8d41d8d4a5d58f64f8a85d3f82cca277, type: 2}
   attributedWood: 50
@@ -559,7 +575,6 @@ MonoBehaviour:
   neededWoodText: {fileID: 114360824264658310}
   neededStoneText: {fileID: 114660586161133394}
   constructUI: {fileID: 223085334185103638}
-  healthBar: {fileID: 1929479346053094}
 --- !u!114 &114140274702712788
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1489,6 +1504,19 @@ CapsuleCollider:
   m_GameObject: {fileID: 1799419318005756}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5000001
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!136 &136987017133199726
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1799419318005756}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.5000001
   m_Height: 2

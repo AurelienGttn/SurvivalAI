@@ -351,7 +351,10 @@ public class WorkerBT : MonoBehaviour {
     void WalkToReadyBuilding()
     {
         Transform buildingToBuild = constructionManager.constructionList[0].transform;
-        agent.destination = GetClosestBound(buildingToBuild);
+        //agent.destination = GetClosestBound(buildingToBuild);
+        agent.destination = buildingToBuild.position;
+        Debug.Log("destination = " + agent.destination);
+        Task.current.debugInfo = "destination" + agent.destination;
         workersManager.buildingWorkers++;
         animator.SetBool("IsWalking", Vector3.Distance(agent.destination, transform.position) > agent.stoppingDistance + 0.5);
 

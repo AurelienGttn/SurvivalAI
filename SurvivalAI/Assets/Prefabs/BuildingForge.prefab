@@ -329,6 +329,7 @@ GameObject:
   - component: {fileID: 208655868832440060}
   - component: {fileID: 114167818270707424}
   - component: {fileID: 136631891701062792}
+  - component: {fileID: 114263580329984252}
   m_Layer: 10
   m_Name: BuildingForge
   m_TagString: Building
@@ -754,7 +755,6 @@ MonoBehaviour:
   type: 0
   isConstructed: 0
   health: 0
-  maxHealth: 0
   normal: {fileID: 2100000, guid: df8000359b365114f86d7653ad6ac100, type: 2}
   fade: {fileID: 2100000, guid: 5b04719281959584092121bbb7630cad, type: 2}
   attributedWood: 169050
@@ -766,7 +766,6 @@ MonoBehaviour:
   neededWoodText: {fileID: 114770215431529112}
   neededStoneText: {fileID: 114079480095844196}
   constructUI: {fileID: 223006732604542842}
-  healthBar: {fileID: 1945318453345428}
 --- !u!114 &114197421993969452
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -835,6 +834,21 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &114263580329984252
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1839884260124900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae5ce37262745fc4f91290c0ba10486e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathAnimation: {fileID: 0}
+  maxHealth: 100
+  currentHealth: 0
+  healthBar: {fileID: 114764902096985360}
 --- !u!114 &114304662024788498
 MonoBehaviour:
   m_ObjectHideFlags: 1

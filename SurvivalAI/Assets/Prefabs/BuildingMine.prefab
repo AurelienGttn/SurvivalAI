@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 208557314552441566}
   - component: {fileID: 114532250918588658}
   - component: {fileID: 136581389468529492}
+  - component: {fileID: 114552886520130722}
   m_Layer: 10
   m_Name: BuildingMine
   m_TagString: Building
@@ -822,7 +823,6 @@ MonoBehaviour:
   type: 2
   isConstructed: 0
   health: 0
-  maxHealth: 0
   normal: {fileID: 2100000, guid: a35efe98b8fe4504fb68e088bb29e2fd, type: 2}
   fade: {fileID: 2100000, guid: 680a99b18d9b1fe4f8e312754de13237, type: 2}
   attributedWood: 50
@@ -834,7 +834,21 @@ MonoBehaviour:
   neededWoodText: {fileID: 114918113763590648}
   neededStoneText: {fileID: 114843891305002736}
   constructUI: {fileID: 223518882557978196}
-  healthBar: {fileID: 1046022489367360}
+--- !u!114 &114552886520130722
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1281591440647056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae5ce37262745fc4f91290c0ba10486e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathAnimation: {fileID: 0}
+  maxHealth: 100
+  currentHealth: 0
+  healthBar: {fileID: 114321962033892328}
 --- !u!114 &114571370773015062
 MonoBehaviour:
   m_ObjectHideFlags: 1

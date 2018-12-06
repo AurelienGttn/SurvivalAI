@@ -14,8 +14,8 @@ public class PlaceableBuilding : MonoBehaviour {
     public BuildingTypes type;
 
     public bool isConstructed = false;
-    public int health;
-    public int maxHealth;
+    public float health;
+    private float maxHealth;
 
     public Material normal;
     public Material fade;
@@ -33,7 +33,6 @@ public class PlaceableBuilding : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI neededStoneText;
 
     [SerializeField] private Canvas constructUI;
-    [SerializeField] private GameObject healthBar;
 
     private bool isSelected;
 
@@ -54,7 +53,8 @@ public class PlaceableBuilding : MonoBehaviour {
 
         attributedWood = 0;
         attributedStone = 0;
-        health = 0;
+
+        health = GetComponent<HealthManager>().currentHealth;
 
         switch (type)
         {
@@ -97,9 +97,9 @@ public class PlaceableBuilding : MonoBehaviour {
     {
         checkAttributed();
         UpdateUI();
-        UpdateHealthBar();
+        health = GetComponent<HealthManager>().currentHealth;
 
-        if(isConstructed == true)
+        if (isConstructed == true)
         {
             Destroy(constructUI);
         }
@@ -136,11 +136,6 @@ public class PlaceableBuilding : MonoBehaviour {
         attributedStoneText.text = attributedStone.ToString();
         neededWoodText.text = neededWood.ToString();
         neededStoneText.text = neededStone.ToString();
-    }
-
-    public void UpdateHealthBar()
-    {
-        healthBar.GetComponent<Slider>().value = health;
     }
 
     public void DestroyConstruction()

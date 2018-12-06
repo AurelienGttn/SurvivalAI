@@ -260,6 +260,7 @@ GameObject:
   - component: {fileID: 208259146732963352}
   - component: {fileID: 114712552191478302}
   - component: {fileID: 136806421764958888}
+  - component: {fileID: 114324874396919574}
   m_Layer: 10
   m_Name: BuildingCulture
   m_TagString: Building
@@ -728,6 +729,21 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114324874396919574
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1695705808442090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae5ce37262745fc4f91290c0ba10486e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathAnimation: {fileID: 0}
+  maxHealth: 100
+  currentHealth: 0
+  healthBar: {fileID: 114270970377479556}
 --- !u!114 &114409882793505546
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1380,7 +1396,6 @@ MonoBehaviour:
   type: 1
   isConstructed: 0
   health: 0
-  maxHealth: 0
   normal: {fileID: 2100000, guid: d7ed3f896b8c0764baea573fbc15c8c1, type: 2}
   fade: {fileID: 2100000, guid: 5cbc4efbeb1388944b73e5ec12070ad0, type: 2}
   attributedWood: 50
@@ -1392,7 +1407,6 @@ MonoBehaviour:
   neededWoodText: {fileID: 114586751961719970}
   neededStoneText: {fileID: 114220289644645682}
   constructUI: {fileID: 223721713853612892}
-  healthBar: {fileID: 1966245739464714}
 --- !u!114 &114863797494813668
 MonoBehaviour:
   m_ObjectHideFlags: 1
