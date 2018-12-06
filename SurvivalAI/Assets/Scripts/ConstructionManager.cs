@@ -8,6 +8,7 @@ public class ConstructionManager : MonoBehaviour {
     public List<GameObject> waitingList = new List<GameObject>();
 
     public ResourceManager resourceManager;
+    public BuildingManager buildingManager;
 
     private void Start()
     {
@@ -16,26 +17,25 @@ public class ConstructionManager : MonoBehaviour {
 
     public void Update()
     {
-        foreach (GameObject g in constructionList)
-        {
-            attributeResources(g);
-            if(g.GetComponent<PlaceableBuilding>().checkAttributed())
-            {
-                switchList(g);
-            }
-        }
+        attributeResources();
+        switchToWaitingList();
+        switchToConstructedList();
     }
 
-    public void attributeResources(GameObject go)
+    public void attributeResources()
     {
-        while((resourceManager.resourcesAvailable[ResourceTypes.Wood] >= 50) && (go.GetComponent<PlaceableBuilding>().attributedWood <= go.GetComponent<PlaceableBuilding>().neededWood - 50))
+        foreach (GameObject go in constructionList)
         {
-            attributeWood(go, 50);
+            while ((resourceManager.resourcesAvailable[ResourceTypes.Wood] >= 50) && (go.GetComponent<PlaceableBuilding>().attributedWood <= go.GetComponent<PlaceableBuilding>().neededWood - 50))
+            {
+                attributeWood(go, 50);
+            }
+            while((resourceManager.resourcesAvailable[ResourceTypes.Stone] >= 50) && (go.GetComponent<PlaceableBuilding>().attributedStone <= go.GetComponent<PlaceableBuilding>().neededStone - 50))
+            {
+                attributeStone(go, 50);
+            }
         }
-        while((resourceManager.resourcesAvailable[ResourceTypes.Stone] >= 50) && (go.GetComponent<PlaceableBuilding>().attributedStone <= go.GetComponent<PlaceableBuilding>().neededStone - 50))
-        {
-            attributeStone(go, 50);
-        }
+            
 
     }
 
@@ -51,10 +51,28 @@ public class ConstructionManager : MonoBehaviour {
         resourceManager.RemoveResource(ResourceTypes.Stone, stone);
     }
 
-    public void switchList(GameObject g)
+    public void switchToWaitingList()
     {
-        waitingList.Add(g);
-        constructionList.Remove(g);
+        foreach (GameObject b in waitingList)
+        {
+            if (b.GetComponent<PlaceableBuilding>().checkAttributed())
+            {
+                waitingList.Add(b);
+                constructionList.Remove(b);
+            }
+        }
+    }
+
+    public void switchToConstructedList()
+    {
+        foreach(GameObject b in waitingList)
+        {
+            if(b.GetComponent<PlaceableBuilding>().checkConstructionStatus())
+            {
+                buildingManager.constructedBuildings.Add(b);
+                waitingList.Remove(b);
+            }
+        }
     }
 
     public void AddBuildingToConstructionList(GameObject g)
