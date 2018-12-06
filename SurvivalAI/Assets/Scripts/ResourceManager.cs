@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Boo.Lang;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -11,33 +12,34 @@ public enum ResourceTypes
     Stone
 }
 
-
 public class ResourceManager : MonoBehaviour {
 
-    public Dictionary<ResourceTypes, int> resourcesAvailable = new Dictionary<ResourceTypes, int>();
-    public Dictionary<ResourceTypes, int> resourcesCapacity = new Dictionary<ResourceTypes, int>();
-    public Dictionary<ResourceTypes, int> resourcesNeeded = new Dictionary<ResourceTypes, int>();
+    public Dictionary<ResourceTypes, float> resourcesAvailable = new Dictionary<ResourceTypes, float>();
+    public Dictionary<ResourceTypes, float> resourcesCapacity = new Dictionary<ResourceTypes, float>();
+    public Dictionary<ResourceTypes, float> resourcesNeeded = new Dictionary<ResourceTypes, float>();
 
     [Header("Wood")]
     [SerializeField] private TextMeshProUGUI woodAvailable;
     [SerializeField] private TextMeshProUGUI woodCapacity;
-    [SerializeField] private TextMeshProUGUI woodConsumption;
+    [SerializeField] private TextMeshProUGUI woodNeeded;
 
     [Header("Stone")]
     [SerializeField] private TextMeshProUGUI stoneAvailable;
     [SerializeField] private TextMeshProUGUI stoneCapacity;
-    [SerializeField] private TextMeshProUGUI stoneConsumption;
+    [SerializeField] private TextMeshProUGUI stoneNeeded;
 
     [Header("Food")]
     [SerializeField] private TextMeshProUGUI foodAvailable;
     [SerializeField] private TextMeshProUGUI foodCapacity;
-    [SerializeField] private TextMeshProUGUI foodConsumption;
+    [SerializeField] private TextMeshProUGUI foodNeeded;
 
     private int workerCount;            // How many active workers are in game
     private int baseConsumption = 20;
     private int multiplier = 3;
     private int workersConsumption;     // How much food those workers consume every minute
     private float currentFood;          // Keep the exact food quantity as a float
+
+    public ConstructionManager constructionManager;
 
     void Start () {
         resourcesAvailable.Add(ResourceTypes.Wood, 0);
@@ -66,8 +68,6 @@ public class ResourceManager : MonoBehaviour {
         resourcesAvailable.Add(ResourceTypes.Food, 100);
         currentFood = resourcesAvailable[ResourceTypes.Food];
         resourcesCapacity.Add(ResourceTypes.Food, 1000);
-
-        StartCoroutine(ConsumeFood());
     }
 
     private void Update()
@@ -86,11 +86,11 @@ public class ResourceManager : MonoBehaviour {
         stoneCapacity.text = resourcesCapacity[ResourceTypes.Stone].ToString();
         foodCapacity.text = resourcesCapacity[ResourceTypes.Food].ToString();
 
-        woodConsumption.text = resourcesNeeded[ResourceTypes.Wood].ToString();
-        stoneConsumption.text = resourcesNeeded[ResourceTypes.Stone].ToString();
-        foodConsumption.text = resourcesNeeded[ResourceTypes.Food].ToString();
+        woodNeeded.text = resourcesNeeded[ResourceTypes.Wood].ToString();
+        stoneNeeded.text = resourcesNeeded[ResourceTypes.Stone].ToString();
+        foodNeeded.text = resourcesNeeded[ResourceTypes.Food].ToString();
 
-
+        updateResourcesConsumption();
     }
 
     public void AddResource(ResourceTypes resourceType, int resourceQuantity)
@@ -131,5 +131,18 @@ public class ResourceManager : MonoBehaviour {
             // Change the actual food available but keep it as an integer
             resourcesAvailable[ResourceTypes.Food] = Mathf.FloorToInt(currentFood);
         }
+    }
+
+    public void updateResourcesConsumption()
+    {
+        resourcesConsumption[ResourceTypes.Wood] = 0f;
+        resourcesConsumption[ResourceTypes.Stone] = 0f;
+
+        foreach(GameObject cb in constructionManager.constructionList)
+        {
+            resourcesConsumption[ResourceTypes.Wood] += cb.GetComponent<PlaceableBuilding>().neededWood;
+            resourcesConsumption[ResourceTypes.Stone] += cb.GetComponent<PlaceableBuilding>().neededStone;
+        }
+        
     }
 }

@@ -39,7 +39,7 @@ public class BuildingPlacement : MonoBehaviour {
                 if(IsLegalPosition())
                 {
                     hasPlaced = true;
-                    constructionManager.GetComponent<ConstructionManager>().AddBuildingToConstructionList(currentBuilding.gameObject);
+                    //constructionManager.GetComponent<ConstructionManager>().AddBuildingToConstructionList(currentBuilding.gameObject);
                     currentBuilding.gameObject.GetComponent<Renderer>().material = currentBuilding.gameObject.GetComponent<PlaceableBuilding>().normal;
                 }
             }
@@ -85,5 +85,6 @@ public class BuildingPlacement : MonoBehaviour {
         currentBuilding = ((GameObject)Instantiate(b)).transform;
         currentSelectedBuilding = b;
         placeableBuilding = currentBuilding.GetComponent<PlaceableBuilding>();
+        constructionManager.GetComponent<ConstructionManager>().AddBuildingToConstructionList(currentBuilding.gameObject);
     }
 }

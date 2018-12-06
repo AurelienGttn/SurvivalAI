@@ -228,7 +228,7 @@ public class WorkerBT : MonoBehaviour {
     [Task]
     bool HasEnoughResources()
     {
-        foreach (KeyValuePair<ResourceTypes, int> resource in resourceManager.resourcesNeeded)
+        foreach (KeyValuePair<ResourceTypes, float> resource in resourceManager.resourcesConsumption)
         {
             if (resource.Value > 0)
                 return false;
@@ -243,7 +243,7 @@ public class WorkerBT : MonoBehaviour {
     {
         transform.localScale = Vector3.one;
         float resourcePriority = 0;
-        foreach (KeyValuePair<ResourceTypes, int> resource in resourceManager.resourcesNeeded)
+        foreach (KeyValuePair<ResourceTypes, float> resource in resourceManager.resourcesConsumption)
         {
             int currentWorkers = workersManager.gatheringWorkers[resource.Key];
             // Add 1 to avoid dividing by 0
