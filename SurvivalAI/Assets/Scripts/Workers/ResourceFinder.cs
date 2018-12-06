@@ -48,12 +48,16 @@ public class ResourceFinder : MonoBehaviour {
         {
             foreach (Transform tree in trees)
             {
-                Vector3 directionToTarget = tree.position - currentPosition;
-                float dSqrToTarget = directionToTarget.sqrMagnitude;
-                if (dSqrToTarget < closestDistance)
+                //Check if it still exists
+                if (tree != null)
                 {
-                    closestDistance = dSqrToTarget;
-                    closestResource = tree;
+                    Vector3 directionToTarget = tree.position - currentPosition;
+                    float dSqrToTarget = directionToTarget.sqrMagnitude;
+                    if (dSqrToTarget < closestDistance)
+                    {
+                        closestDistance = dSqrToTarget;
+                        closestResource = tree;
+                    }
                 }
             }
         }
@@ -61,12 +65,16 @@ public class ResourceFinder : MonoBehaviour {
         {
             foreach (Transform rock in rocks)
             {
-                Vector3 directionToTarget = rock.position - currentPosition;
-                float dSqrToTarget = directionToTarget.sqrMagnitude;
-                if (dSqrToTarget < closestDistance)
+                if (rock != null)
                 {
-                    closestDistance = dSqrToTarget;
-                    closestResource = rock;
+                    //Check if it still exists
+                    Vector3 directionToTarget = rock.position - currentPosition;
+                    float dSqrToTarget = directionToTarget.sqrMagnitude;
+                    if (dSqrToTarget < closestDistance)
+                    {
+                        closestDistance = dSqrToTarget;
+                        closestResource = rock;
+                    }
                 }
             }
         }
@@ -74,12 +82,16 @@ public class ResourceFinder : MonoBehaviour {
         {
             foreach (Transform berry in berries)
             {
-                Vector3 directionToTarget = berry.position - currentPosition;
-                float dSqrToTarget = directionToTarget.sqrMagnitude;
-                if (dSqrToTarget < closestDistance)
+                if (berry != null)
                 {
-                    closestDistance = dSqrToTarget;
-                    closestResource = berry;
+                    //Check if it still exists
+                    Vector3 directionToTarget = berry.position - currentPosition;
+                    float dSqrToTarget = directionToTarget.sqrMagnitude;
+                    if (dSqrToTarget < closestDistance)
+                    {
+                        closestDistance = dSqrToTarget;
+                        closestResource = berry;
+                    }
                 }
             }
         }

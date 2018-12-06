@@ -10,6 +10,7 @@ public class WorkerBT : MonoBehaviour {
     // Reproduction
     [SerializeField] private GameObject workerPrefab;
     private Transform workersParent;
+    private bool canMate;
 
     // Navigation
     private NavMeshAgent agent;
@@ -31,6 +32,7 @@ public class WorkerBT : MonoBehaviour {
     // Resting
     private Transform mainBuilding;
     [SerializeField] private Slider energy;
+    private float exactEnergy;
 
     // Finders and managers
     private ResourceFinder resourceFinder;
@@ -45,11 +47,15 @@ public class WorkerBT : MonoBehaviour {
     public LayerMask enemyLayerMask;
 
 
+    private float cumulativeMatingChance;
+
     #region Unity callbacks
     void Start()
     {
         // Reproduction
         workersParent = GameObject.Find("Workers").transform;
+        canMate = true;
+        cumulativeMatingChance = 0;
 
         // Finders and managers
         resourceFinder = GetComponent<ResourceFinder>();
@@ -67,8 +73,10 @@ public class WorkerBT : MonoBehaviour {
         // Resting
         mainBuilding = GameObject.Find("MainBuilding").transform;
         energy.value = 100;
+        exactEnergy = energy.value;
 
         animator = GetComponent<Animator>();
+        animator.SetFloat("Energy", energy.value);
 
         // Hero stuff
         hero = GameObject.FindGameObjectWithTag("Player").transform;
@@ -101,6 +109,16 @@ public class WorkerBT : MonoBehaviour {
         targetClosestBound = targetClosestBound * target.localScale.x / 2 + target.position;
 
         return targetClosestBound;
+    }
+
+    // As in the real world, wait a little before giving birth
+    // The future worker is in the main building during gestation
+    // and doesn't need a parent to take care of him
+    private IEnumerator Gestation()
+    {
+        yield return new WaitForSeconds(10f);
+        CreateNewWorker();
+        canMate = true;
     }
 
     // Create a new worker as a result of mating
@@ -177,7 +195,8 @@ public class WorkerBT : MonoBehaviour {
     void RestAtMainBuilding()
     {
         transform.localScale = Vector3.zero;
-        energy.value += 1f;
+        exactEnergy += 0.67f;
+        energy.value = exactEnergy;
         animator.SetFloat("Energy", energy.value);
 
         Task.current.Succeed();
@@ -186,9 +205,18 @@ public class WorkerBT : MonoBehaviour {
     [Task]
     void TryToMate()
     {
-        if (Random.Range(0, 1) < 1 / (workersManager.workers.Count + 1))
+        // This formula is made to have a higher probability of giving birth
+        // to a new worker when there are fewer, to have a consistent growth
+        if(canMate)
         {
-            CreateNewWorker();
+            float matingChance = 1f / (workersManager.workers.Count * 2 - 1) / 200;
+            cumulativeMatingChance += matingChance;
+            Debug.Log("matingChance = " + cumulativeMatingChance);
+            if (Random.Range(0f, 1f) < matingChance)
+            {
+                StartCoroutine(Gestation());
+                canMate = false;
+            }
         }
 
         Task.current.Succeed();
@@ -275,10 +303,11 @@ public class WorkerBT : MonoBehaviour {
         }
 
         animator.SetBool("IsGathering", true);
-        energy.value -= 0.02f;
+        exactEnergy -= 0.2f;
+        energy.value = Mathf.Ceil(exactEnergy);
         animator.SetFloat("Energy", energy.value);
         // Set it low enough to have several animations
-        exactResourcesCarried += 0.05f;
+        exactResourcesCarried += 0.1f;
         resourcesCarried = (int)Mathf.Floor(exactResourcesCarried);
         resourceToGather.GetComponent<HealthManager>().TakeDamage(0.05f);
 
@@ -334,7 +363,8 @@ public class WorkerBT : MonoBehaviour {
     {
         Transform currentlyBuilding = constructionManager.constructionList[0].transform;
         animator.SetBool("IsBuilding", true);
-        energy.value -= 0.02f;
+        exactEnergy -= 0.2f;
+        energy.value = Mathf.Ceil(exactEnergy);
         animator.SetFloat("Energy", energy.value);
         // Set it low enough to have several animations
         currentlyBuilding.GetComponent<HealthManager>().Heal(0.05f);

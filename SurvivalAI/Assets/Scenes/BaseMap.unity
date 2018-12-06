@@ -820,6 +820,10 @@ Prefab:
       propertyPath: enemyLayerMask.m_Bits
       value: 8192
       objectReference: {fileID: 0}
+    - target: {fileID: 1785519770190304, guid: 2b8fcce65f3cc044992487a2755c926f, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b8fcce65f3cc044992487a2755c926f, type: 2}
   m_IsPrefabAsset: 0
@@ -6163,6 +6167,10 @@ Prefab:
         type: 2}
       propertyPath: enemyLayerMask.m_Bits
       value: 8192
+      objectReference: {fileID: 0}
+    - target: {fileID: 1785519770190304, guid: 2b8fcce65f3cc044992487a2755c926f, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b8fcce65f3cc044992487a2755c926f, type: 2}
@@ -15954,7 +15962,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4648386050222494, guid: 55278fd300ec4bd4589dd56e7061529a, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 3
+      value: 1.78
       objectReference: {fileID: 0}
     - target: {fileID: 4648386050222494, guid: 55278fd300ec4bd4589dd56e7061529a, type: 2}
       propertyPath: m_LocalPosition.y
@@ -15962,7 +15970,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4648386050222494, guid: 55278fd300ec4bd4589dd56e7061529a, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 3
+      value: 6.87
       objectReference: {fileID: 0}
     - target: {fileID: 4648386050222494, guid: 55278fd300ec4bd4589dd56e7061529a, type: 2}
       propertyPath: m_LocalRotation.x
@@ -20478,7 +20486,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4575265627324860, guid: 2b8fcce65f3cc044992487a2755c926f, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 28.9
+      value: 6.3
       objectReference: {fileID: 0}
     - target: {fileID: 4575265627324860, guid: 2b8fcce65f3cc044992487a2755c926f, type: 2}
       propertyPath: m_LocalPosition.y
@@ -20486,7 +20494,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4575265627324860, guid: 2b8fcce65f3cc044992487a2755c926f, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -5.3
+      value: 2.3
       objectReference: {fileID: 0}
     - target: {fileID: 4575265627324860, guid: 2b8fcce65f3cc044992487a2755c926f, type: 2}
       propertyPath: m_LocalRotation.x
@@ -49140,7 +49148,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1054776152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87188,6 +87196,10 @@ Prefab:
       propertyPath: enemyLayerMask.m_Bits
       value: 8192
       objectReference: {fileID: 0}
+    - target: {fileID: 1785519770190304, guid: 2b8fcce65f3cc044992487a2755c926f, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b8fcce65f3cc044992487a2755c926f, type: 2}
   m_IsPrefabAsset: 0
@@ -94937,6 +94949,10 @@ Prefab:
         type: 2}
       propertyPath: enemyLayerMask.m_Bits
       value: 8192
+      objectReference: {fileID: 0}
+    - target: {fileID: 1785519770190304, guid: 2b8fcce65f3cc044992487a2755c926f, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b8fcce65f3cc044992487a2755c926f, type: 2}
