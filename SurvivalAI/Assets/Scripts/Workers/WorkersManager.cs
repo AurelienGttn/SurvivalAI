@@ -18,4 +18,12 @@ public class WorkersManager : MonoBehaviour {
 
         buildingWorkers = 0;
     }
+
+    private void Update()
+    {
+        Mathf.Clamp(buildingWorkers, 0, workers.Count);
+        Mathf.Clamp(gatheringWorkers[ResourceTypes.Wood], 0, workers.Count);
+        Mathf.Clamp(gatheringWorkers[ResourceTypes.Stone], 0, workers.Count);
+        Mathf.Clamp(gatheringWorkers[ResourceTypes.Food], 0, workers.Count);
+    }
 }

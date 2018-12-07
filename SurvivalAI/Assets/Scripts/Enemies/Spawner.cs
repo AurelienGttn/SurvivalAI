@@ -23,7 +23,10 @@ public class Spawner : MonoBehaviour {
         for (int i = 0; i < numberOfEnemies; i++)
         {
             Vector3 randomPos = spawnLocation.position;
-            randomPos = new Vector3(randomPos.x + Random.Range(-spawnZone.x / 2, spawnZone.x / 2), 1, randomPos.z + Random.Range(-spawnZone.z / 2, spawnZone.z / 2));
+            if(spawnerIndex % 2 == 0)
+                randomPos = new Vector3(randomPos.x + Random.Range(-spawnZone.x / 2, spawnZone.x / 2), 1, randomPos.z + Random.Range(-spawnZone.z / 2, spawnZone.z / 2));
+            else
+                randomPos = new Vector3(randomPos.z + Random.Range(-spawnZone.z / 2, spawnZone.z / 2), 1, randomPos.x + Random.Range(-spawnZone.x / 2, spawnZone.x / 2));
             Instantiate(enemyPrefab, randomPos, Quaternion.identity, enemiesParent);
         }
     }
@@ -32,7 +35,10 @@ public class Spawner : MonoBehaviour {
     {
         for (int i = 0; i < spawnLocations.Length; i++)
         {
-            Gizmos.DrawWireCube(spawnLocations[i].position, spawnZone);
+            if (i % 2 == 0)
+                Gizmos.DrawWireCube(spawnLocations[i].position, spawnZone);
+            else
+                Gizmos.DrawWireCube(spawnLocations[i].position, new Vector3(spawnZone.z, 1, spawnZone.x));
         }
     }
 }

@@ -29,7 +29,7 @@ public class BuildingPlacement : MonoBehaviour {
 
         if (currentBuilding != null)
         {
-            if(currentBuilding != null && !hasPlaced)
+            if(!hasPlaced)
             {
                 currentBuilding.position = new Vector3(p.x, 0, p.z);
             }
@@ -72,19 +72,15 @@ public class BuildingPlacement : MonoBehaviour {
 
     bool IsLegalPosition()
     {
-        if(placeableBuilding.colliders.Count > 0)
-        {
-            return false;
-        }
-        return true;
+        return placeableBuilding.colliders.Count == 0;
     }
 
     public void SetItem(GameObject b)
     {
         hasPlaced = false;
-        currentBuilding = ((GameObject)Instantiate(b)).transform;
+        currentBuilding = Instantiate(b).transform;
         currentSelectedBuilding = b;
         placeableBuilding = currentBuilding.GetComponent<PlaceableBuilding>();
-        constructionManager.GetComponent<ConstructionManager>().AddBuildingToConstructionList(currentBuilding.gameObject);
+        constructionManager.GetComponent<ConstructionManager>().AddBuildingToConstructionList(placeableBuilding);
     }
 }

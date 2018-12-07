@@ -11,6 +11,7 @@ public class WorkerBT : MonoBehaviour {
     [SerializeField] private GameObject workerPrefab;
     private Transform workersParent;
     private bool canMate;
+    [SerializeField] private ParticleSystem matingFX;
 
     // Navigation
     private NavMeshAgent agent;
@@ -19,15 +20,20 @@ public class WorkerBT : MonoBehaviour {
     private Animator animator;
 
     // Gathering parameters
-    public int maxResources = 5;
+    public int maxResources = 25;
     public int resourcesCarried;
     private float exactResourcesCarried = 0;
     public ResourceTypes currentlyGathering = ResourceTypes.None;
     private ResourceTypes highestPriorityResource;
     private Transform resourceToGather;
-    // Tools for gathering
+    
+    // Tools
     [SerializeField] private GameObject axe;
     [SerializeField] private GameObject pickaxe;
+    [SerializeField] private GameObject hammer;
+
+    // Building parameters
+    public Transform currentlyBuilding;
 
     // Resting
     private Transform mainBuilding;
@@ -55,7 +61,6 @@ public class WorkerBT : MonoBehaviour {
         // Reproduction
         workersParent = GameObject.Find("Workers").transform;
         canMate = true;
-        cumulativeMatingChance = 0;
 
         // Finders and managers
         resourceFinder = GetComponent<ResourceFinder>();
@@ -163,7 +168,15 @@ public class WorkerBT : MonoBehaviour {
     [Task]
     bool IsTired()
     {
-        return animator.GetBool("IsTired");
+        if (animator.GetBool("IsTired"))
+        {
+            return true;
+        }
+
+        // Make sure the scale is set back to 1 when the
+        // worker goes out of the main building
+        transform.localScale = Vector3.one;
+        return false;
     }
     #endregion
 
@@ -210,10 +223,9 @@ public class WorkerBT : MonoBehaviour {
         if(canMate)
         {
             float matingChance = 1f / (workersManager.workers.Count * 2 - 1) / 200;
-            cumulativeMatingChance += matingChance;
-            Debug.Log("matingChance = " + cumulativeMatingChance);
             if (Random.Range(0f, 1f) < matingChance)
             {
+                Instantiate(matingFX, new Vector3(0, 1, 0), Quaternion.identity);
                 StartCoroutine(Gestation());
                 canMate = false;
             }
@@ -241,7 +253,6 @@ public class WorkerBT : MonoBehaviour {
     [Task]
     void ChooseResource()
     {
-        transform.localScale = Vector3.one;
         float resourcePriority = 0;
         foreach (KeyValuePair<ResourceTypes, float> resource in resourceManager.resourcesConsumption)
         {
@@ -254,9 +265,12 @@ public class WorkerBT : MonoBehaviour {
                 resourcePriority = new_resourcePriority;
             }
         }
-        currentlyGathering = highestPriorityResource;
-        // Add this worker to the worker manager, to update priorities
-        workersManager.gatheringWorkers[currentlyGathering]++;
+        if (currentlyGathering == ResourceTypes.None)
+        {
+            currentlyGathering = highestPriorityResource;
+            // Add this worker to the worker manager, to update priorities
+            workersManager.gatheringWorkers[currentlyGathering]++;
+        }
 
         Task.current.Complete(currentlyGathering != ResourceTypes.None);
     }
@@ -266,16 +280,19 @@ public class WorkerBT : MonoBehaviour {
     {
         if (currentlyGathering == ResourceTypes.Wood)
         {
+            hammer.SetActive(false);
             pickaxe.SetActive(false);
             axe.SetActive(true);
         }
         else if (currentlyGathering == ResourceTypes.Stone)
         {
+            hammer.SetActive(false);
             axe.SetActive(false);
             pickaxe.SetActive(true);
         }
         else
         {
+            hammer.SetActive(false);
             axe.SetActive(false);
             pickaxe.SetActive(false);
         }
@@ -307,7 +324,7 @@ public class WorkerBT : MonoBehaviour {
         energy.value = Mathf.Ceil(exactEnergy);
         animator.SetFloat("Energy", energy.value);
         // Set it low enough to have several animations
-        exactResourcesCarried += 0.1f;
+        exactResourcesCarried += 0.5f;
         resourcesCarried = (int)Mathf.Floor(exactResourcesCarried);
         resourceToGather.GetComponent<HealthManager>().TakeDamage(0.05f);
 
@@ -329,8 +346,11 @@ public class WorkerBT : MonoBehaviour {
     void DepositResources()
     {
         resourceManager.AddResource(currentlyGathering, resourcesCarried);
-        workersManager.gatheringWorkers[currentlyGathering]--;
-        currentlyGathering = ResourceTypes.None;
+        if (currentlyGathering != ResourceTypes.None)
+        {
+            workersManager.gatheringWorkers[currentlyGathering]--;
+            currentlyGathering = ResourceTypes.None;
+        }
         resourcesCarried = 0;
         exactResourcesCarried = 0;
 
@@ -342,20 +362,34 @@ public class WorkerBT : MonoBehaviour {
     #region Building actions
 
     [Task]
-    void CheckBuildingsReady()
+    void ChooseBuilding()
     {
-        Task.current.Complete(constructionManager.constructionList.Count > 0);
+        animator.SetBool("IsBuilding", false);
+        if (currentlyBuilding == null)
+        {
+            workersManager.buildingWorkers++;
+        }
+        if (constructionManager.waitingList.Count > 0)
+        {
+            currentlyBuilding = constructionManager.waitingList[0].transform;
+        }
+        else
+        {
+            workersManager.buildingWorkers--;
+        }
+
+        pickaxe.SetActive(false);
+        axe.SetActive(false);
+        hammer.SetActive(true);
+
+        Task.current.Complete(currentlyBuilding != null);
     }
 
     [Task]
     void WalkToReadyBuilding()
     {
-        Transform buildingToBuild = constructionManager.constructionList[0].transform;
-        //agent.destination = GetClosestBound(buildingToBuild);
-        agent.destination = buildingToBuild.position;
-        Debug.Log("destination = " + agent.destination);
+        agent.destination = GetClosestBound(currentlyBuilding);
         Task.current.debugInfo = "destination" + agent.destination;
-        workersManager.buildingWorkers++;
         animator.SetBool("IsWalking", Vector3.Distance(agent.destination, transform.position) > agent.stoppingDistance + 0.5);
 
         Task.current.Succeed();
@@ -364,20 +398,38 @@ public class WorkerBT : MonoBehaviour {
     [Task]
     void Build()
     {
-        Transform currentlyBuilding = constructionManager.constructionList[0].transform;
-        animator.SetBool("IsBuilding", true);
-        exactEnergy -= 0.2f;
-        energy.value = Mathf.Ceil(exactEnergy);
-        animator.SetFloat("Energy", energy.value);
-        // Set it low enough to have several animations
-        currentlyBuilding.GetComponent<HealthManager>().Heal(0.05f);
-        if (currentlyBuilding.GetComponent<HealthManager>().currentHealth >= currentlyBuilding.GetComponent<HealthManager>().maxHealth)
+        // If building has been destroyed or finished
+        // while the worker was walking towards it or 
+        // while he was building it, cancel the action.
+        if (currentlyBuilding.GetComponentInChildren<Canvas>() == null)
         {
-            animator.SetBool("IsBuilding", false);
+            currentlyBuilding = null;
             workersManager.buildingWorkers--;
+            animator.SetBool("IsBuilding", false);
+            Task.current.Fail();
         }
+        else if (currentlyBuilding != null)
+        {
+            HealthManager healthManager = currentlyBuilding.GetComponent<HealthManager>();
 
-        Task.current.Succeed();
+            animator.SetBool("IsBuilding", true);
+            exactEnergy -= 0.5f;
+            energy.value = Mathf.Ceil(exactEnergy);
+            animator.SetFloat("Energy", energy.value);
+            // Set it low enough to have several animations
+            if (healthManager.currentHealth < healthManager.maxHealth)
+            {
+                healthManager.Heal(0.5f);
+            }
+            else
+            {
+                animator.SetBool("IsBuilding", false);
+                workersManager.buildingWorkers--;
+                currentlyBuilding = null;
+            }
+
+            Task.current.Succeed();
+        }
     }
     #endregion
     

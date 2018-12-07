@@ -12,6 +12,9 @@ public class PlaceableBuilding : MonoBehaviour {
     public List<Collider> colliders = new List<Collider>();
 
     public BuildingTypes type;
+    private ConstructionManager constructionManager;
+    private BuildingManager buildingManager;
+    private ResourceManager resourceManager;
 
     public bool isConstructed = false;
     public float health;
@@ -19,20 +22,11 @@ public class PlaceableBuilding : MonoBehaviour {
 
     public Material normal;
     public Material fade;
-
-    public int attributedWood;
-    public int attributedStone;
-
+    
     public int neededWood;
     public int neededStone;
 
-    [SerializeField] private TextMeshProUGUI attributedWoodText;
-    [SerializeField] private TextMeshProUGUI attributedStoneText;
-
-    [SerializeField] private TextMeshProUGUI neededWoodText;
-    [SerializeField] private TextMeshProUGUI neededStoneText;
-
-    [SerializeField] private Canvas constructUI;
+    [SerializeField] private GameObject buildingUI;
 
     private bool isSelected;
 
@@ -51,10 +45,9 @@ public class PlaceableBuilding : MonoBehaviour {
         buildingsParent = GameObject.Find("Buildings");
         transform.parent = buildingsParent.transform;
 
-        attributedWood = 0;
-        attributedStone = 0;
-
-        health = GetComponent<HealthManager>().currentHealth;
+        constructionManager = FindObjectOfType<ConstructionManager>();
+        buildingManager = FindObjectOfType<BuildingManager>();
+        resourceManager = FindObjectOfType<ResourceManager>();
 
         switch (type)
         {
@@ -91,56 +84,66 @@ public class PlaceableBuilding : MonoBehaviour {
             default:
                 break;
         }
+
+        GetComponent<HealthManager>().maxHealth = maxHealth;
+        health = GetComponent<HealthManager>().currentHealth;
+
+        resourceManager.resourcesConsumption[ResourceTypes.Wood] += neededWood;
+        resourceManager.resourcesConsumption[ResourceTypes.Stone] += neededStone;
+        
     }
 
     private void Update()
     {
-        checkAttributed();
-        UpdateUI();
+        CheckAvailable();
         health = GetComponent<HealthManager>().currentHealth;
+        CheckConstructionStatus();
 
         if (isConstructed == true)
         {
-            Destroy(constructUI);
+            Destroy(buildingUI);
         }
     }
 
-    public bool checkAttributed()
-    {
-        if(neededWood == attributedWood && neededStone == attributedStone)
+    public void CheckAvailable(){
+        if (constructionManager.constructionList.Count > 0)
         {
-            Debug.Log("Assez de ressources");
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public bool checkConstructionStatus()
-    {
-        if (isConstructed == false && health == maxHealth)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
+            if (constructionManager.constructionList[0] == this)
+            {
+                if (resourceManager.resourcesAvailable[ResourceTypes.Wood] >= neededWood
+                    && resourceManager.resourcesAvailable[ResourceTypes.Stone] >= neededStone)
+                {
+                    constructionManager.waitingList.Add(this);
+                    constructionManager.constructionList.Remove(this);
+                }
+            }
         }
     }
 
-    public void UpdateUI()
+    public void CheckConstructionStatus()
     {
-        attributedWoodText.text = attributedWood.ToString();
-        attributedStoneText.text = attributedStone.ToString();
-        neededWoodText.text = neededWood.ToString();
-        neededStoneText.text = neededStone.ToString();
+        if (!isConstructed && health == maxHealth)
+        {
+            isConstructed = true;
+            buildingManager.constructedBuildings.Add(this);
+            constructionManager.waitingList.Remove(this);
+
+            resourceManager.RemoveResource(ResourceTypes.Wood, neededWood);
+            resourceManager.RemoveResource(ResourceTypes.Stone, neededStone);
+            resourceManager.resourcesConsumption[ResourceTypes.Wood] -= neededWood;
+            resourceManager.resourcesConsumption[ResourceTypes.Stone] -= neededStone;
+
+            Destroy(buildingUI);
+        }
     }
 
     public void DestroyConstruction()
     {
-        Destroy(this.gameObject);
+        if (constructionManager.waitingList.Contains(this))
+            constructionManager.waitingList.Remove(this);
+        if (constructionManager.constructionList.Contains(this))
+            constructionManager.constructionList.Remove(this);
+        Destroy(gameObject);
     }
 
     void OnTriggerEnter(Collider c)

@@ -42,8 +42,8 @@ public class ResourceManager : MonoBehaviour {
     public ConstructionManager constructionManager;
 
     void Start () {
-        resourcesAvailable.Add(ResourceTypes.Wood, 0);
-        resourcesAvailable.Add(ResourceTypes.Stone, 0);
+        resourcesAvailable.Add(ResourceTypes.Wood, 200);
+        resourcesAvailable.Add(ResourceTypes.Stone, 200);
 
         resourcesCapacity.Add(ResourceTypes.Wood, 1000);
         resourcesCapacity.Add(ResourceTypes.Stone, 1000);
@@ -89,8 +89,7 @@ public class ResourceManager : MonoBehaviour {
         woodConsumption.text = resourcesConsumption[ResourceTypes.Wood].ToString();
         stoneConsumption.text = resourcesConsumption[ResourceTypes.Stone].ToString();
         foodConsumption.text = resourcesConsumption[ResourceTypes.Food].ToString();
-
-        updateResourcesConsumption();
+        
     }
 
     public void AddResource(ResourceTypes resourceType, int resourceQuantity)
@@ -131,18 +130,5 @@ public class ResourceManager : MonoBehaviour {
             // Change the actual food available but keep it as an integer
             resourcesAvailable[ResourceTypes.Food] = Mathf.FloorToInt(currentFood);
         }
-    }
-
-    public void updateResourcesConsumption()
-    {
-        resourcesConsumption[ResourceTypes.Wood] = 0f;
-        resourcesConsumption[ResourceTypes.Stone] = 0f;
-
-        foreach(GameObject cb in constructionManager.constructionList)
-        {
-            resourcesConsumption[ResourceTypes.Wood] += cb.GetComponent<PlaceableBuilding>().neededWood;
-            resourcesConsumption[ResourceTypes.Stone] += cb.GetComponent<PlaceableBuilding>().neededStone;
-        }
-        
     }
 }

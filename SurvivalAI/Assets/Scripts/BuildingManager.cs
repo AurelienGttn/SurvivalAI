@@ -7,7 +7,7 @@ public class BuildingManager : MonoBehaviour {
     public GameObject[] buildings;
     private BuildingPlacement buildingPlacement;
 
-    public List<GameObject> constructedBuildings;
+    public List<PlaceableBuilding> constructedBuildings;
 
     private void Start()
     {

@@ -257,6 +257,7 @@ GameObject:
   - component: {fileID: 223746862059727824}
   - component: {fileID: 114176658428129602}
   - component: {fileID: 114121666923389152}
+  - component: {fileID: 114832517778789522}
   m_Layer: 10
   m_Name: BuildingUI
   m_TagString: Untagged
@@ -1223,6 +1224,18 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &114832517778789522
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1687928658849148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d84aa8747b4e1c5439a05cf657fdbbfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Camera: {fileID: 0}
 --- !u!114 &114887756855737670
 MonoBehaviour:
   m_ObjectHideFlags: 1

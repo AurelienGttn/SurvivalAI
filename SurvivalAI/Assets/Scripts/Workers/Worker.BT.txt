@@ -35,6 +35,7 @@ tree("Build")
 	sequence
 		not IsGathering
 		CanBuild
+		ChooseBuilding
 		WalkToReadyBuilding
 		fallback 
 			IsWalking

@@ -16424,7 +16424,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 7.9
+  m_fontSize: 7.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -17202,15 +17202,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4927265206506688, guid: 6c6dd3e48ed0c6e4098f3170556e8e54, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 2.7552443
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4927265206506688, guid: 6c6dd3e48ed0c6e4098f3170556e8e54, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -17.570444
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4927265206506688, guid: 6c6dd3e48ed0c6e4098f3170556e8e54, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 5.0815935
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4927265206506688, guid: 6c6dd3e48ed0c6e4098f3170556e8e54, type: 2}
       propertyPath: m_LocalRotation.x
@@ -20522,11 +20522,6 @@ Prefab:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 534669904}
-    - target: {fileID: 114045598371799226, guid: 2b8fcce65f3cc044992487a2755c926f,
-        type: 2}
-      propertyPath: mainBuilding
-      value: 
-      objectReference: {fileID: 244184690}
     - target: {fileID: 224991104217769914, guid: 2b8fcce65f3cc044992487a2755c926f,
         type: 2}
       propertyPath: m_AnchorMax.x
@@ -20547,8 +20542,7 @@ Prefab:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 0}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b8fcce65f3cc044992487a2755c926f, type: 2}
   m_IsPrefabAsset: 0
 --- !u!1 &462844536
@@ -22630,7 +22624,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 517529413}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 34.1, y: 1, z: 19.5}
+  m_LocalPosition: {x: -40, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1054776153}
@@ -24575,7 +24569,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 7.9
+  m_fontSize: 7.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -26357,7 +26351,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 7.9
+  m_fontSize: 7.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -32397,7 +32391,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 7.9
+  m_fontSize: 7.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -49150,7 +49144,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1054776152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49169,9 +49163,9 @@ MonoBehaviour:
   - {fileID: 517529414}
   enemyPrefab: {fileID: 1482147543265652, guid: 002ad36654e894143a15df0bba949279,
     type: 2}
-  numberOfEnemies: 2
-  spawnDelay: 2
-  spawnZone: {x: 10, y: 3, z: 10}
+  numberOfEnemies: 1
+  spawnDelay: 4
+  spawnZone: {x: 100, y: 3, z: 10}
   enemiesParent: {fileID: 1236677115}
 --- !u!4 &1054776153
 Transform:
@@ -51343,7 +51337,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1102124621}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -20, y: 1, z: 35}
+  m_LocalPosition: {x: 0, y: 1, z: 40}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1054776153}
@@ -55864,7 +55858,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.09555149, y: 0.16588664}
   m_AnchorMax: {x: 0.3956324, y: 0.82611287}
-  m_AnchoredPosition: {x: -3.4051285, y: 0}
+  m_AnchoredPosition: {x: -3.405136, y: 0}
   m_SizeDelta: {x: -6.9487305, y: 0.3680172}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!132 &1200009087
@@ -55940,7 +55934,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 7.9
+  m_fontSize: 7.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -59169,7 +59163,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1251719496}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 36, y: 1, z: -30}
+  m_LocalPosition: {x: 40, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1054776153}
@@ -61344,7 +61338,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 7.9
+  m_fontSize: 7.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -63105,7 +63099,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 7.9
+  m_fontSize: 7.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -76494,7 +76488,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1641971175}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -19.6, y: 1, z: -43}
+  m_LocalPosition: {x: 0, y: 1, z: -40}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1054776153}
@@ -82389,7 +82383,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1764505654}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.7552443, y: 17.570444, z: -5.0815935}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 244184690}
@@ -84175,8 +84169,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1803463413}
-  m_LocalRotation: {x: 0.4544868, y: -0, z: -0, w: 0.8907535}
-  m_LocalPosition: {x: -5.13, y: 21.18, z: -13.76}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -84955,7 +84949,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 7.9
+  m_fontSize: 7.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -85634,7 +85628,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 7.9
+  m_fontSize: 7.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -96374,8 +96368,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   constructionList: []
   waitingList: []
-  resourceManager: {fileID: 375195578}
-  buildingManager: {fileID: 0}
 --- !u!4 &2076013430
 Transform:
   m_ObjectHideFlags: 0
@@ -96383,7 +96375,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2076013428}
   m_LocalRotation: {x: 0, y: -0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.19557786, y: 28.710234, z: -25.529642}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
