@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 114186102717822062}
   - component: {fileID: 136669475231617346}
   - component: {fileID: 114197481049055970}
+  - component: {fileID: 114159351571538066}
   m_Layer: 10
   m_Name: BuildingTower
   m_TagString: Building
@@ -203,7 +204,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1800494417046628}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 35.49473, y: 1.0499996, z: 0.67962515}
+  m_LocalPosition: {x: 1.3, y: 1.0499996, z: 6.72}
   m_LocalScale: {x: 3, y: 1, z: 3}
   m_Children:
   - {fileID: 4791904436788000}
@@ -363,6 +364,21 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114159351571538066
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1800494417046628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f08c7e3356443d547b050fe28b43e415, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range: 15
+  fireRate: 1
+  firingStone: {fileID: 1858417789274214, guid: f1f165fb26d4ba142927f60d2f6deb9f,
+    type: 2}
 --- !u!114 &114186102717822062
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -376,18 +392,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colliders: []
   type: 5
+  constructionManager: {fileID: 0}
   isConstructed: 0
   health: 0
   normal: {fileID: 2100000, guid: 5a5856e9ecb98954fa9fea16a2148ffb, type: 2}
   fade: {fileID: 2100000, guid: 7b2523d395cb6ad449e0a904c590fe5e, type: 2}
-  attributedWood: 4450
-  attributedStone: 4450
   neededWood: 0
   neededStone: 0
-  attributedWoodText: {fileID: 0}
-  attributedStoneText: {fileID: 0}
-  neededWoodText: {fileID: 0}
-  neededStoneText: {fileID: 0}
   buildingUI: {fileID: 1539387825518482}
 --- !u!114 &114197481049055970
 MonoBehaviour:

@@ -41,6 +41,7 @@ GameObject:
   - component: {fileID: 23552403526835886}
   - component: {fileID: 136245897086173698}
   - component: {fileID: 208907351939870750}
+  - component: {fileID: 114081622606471074}
   - component: {fileID: 114874281200212980}
   - component: {fileID: 136815220819196382}
   - component: {fileID: 114765262593320808}
@@ -203,7 +204,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1225587756695606}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.357047, y: 1.049999, z: -2.6799884}
+  m_LocalPosition: {x: 6.42, y: 1, z: -3.04}
   m_LocalScale: {x: 3, y: 1, z: 3}
   m_Children:
   - {fileID: 4510780339877382}
@@ -329,6 +330,18 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &114081622606471074
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1225587756695606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9defa88a95a74cf4185fe19f7b65b8a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourceManager: {fileID: 0}
 --- !u!114 &114124255782702276
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -576,18 +589,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colliders: []
   type: 3
+  constructionManager: {fileID: 0}
   isConstructed: 0
   health: 0
   normal: {fileID: 2100000, guid: b512e0d266c333c46937efc25702725c, type: 2}
   fade: {fileID: 2100000, guid: b0fa3bb8c96ec7d4480d556f8d5afe15, type: 2}
-  attributedWood: 0
-  attributedStone: 0
   neededWood: 0
   neededStone: 0
-  attributedWoodText: {fileID: 0}
-  attributedStoneText: {fileID: 0}
-  neededWoodText: {fileID: 0}
-  neededStoneText: {fileID: 0}
   buildingUI: {fileID: 1711361174066522}
 --- !u!136 &136245897086173698
 CapsuleCollider:

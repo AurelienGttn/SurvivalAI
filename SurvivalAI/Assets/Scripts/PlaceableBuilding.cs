@@ -12,7 +12,7 @@ public class PlaceableBuilding : MonoBehaviour {
     public List<Collider> colliders = new List<Collider>();
 
     public BuildingTypes type;
-    private ConstructionManager constructionManager;
+    public ConstructionManager constructionManager;
     private BuildingManager buildingManager;
     private ResourceManager resourceManager;
 

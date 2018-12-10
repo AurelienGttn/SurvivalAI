@@ -7,23 +7,31 @@ public class SelectObjectManager : MonoBehaviour {
     public GameObject selectedObject;
     public GameObject hitObject;
 
+    public Camera cam;
+
     private void Update()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Debug.DrawRay(ray.origin, ray.direction * 100, Color.yellow);
 
         RaycastHit hitInfo;
 
-        /*RaycastHit[] hits = Physics.RaycastAll(ray, 100, 9);
+        RaycastHit[] hits;
+        hits = Physics.RaycastAll(ray.origin, ray.direction * 100);
 
-        foreach (RaycastHit hitObj in hits)
+        if (Physics.Raycast(ray.origin,ray.direction * 100, out hitInfo))
         {
-            if (hitObj.transform.root.gameObject.tag == "Building" || hitObj.transform.root.gameObject.tag == "Worker" || hitObj.transform.root.gameObject.tag == "Player")
+            foreach (RaycastHit hitObj in hits)
             {
-                hitObject = hitObj.transform.root.gameObject;
+                if (hitObj.collider.gameObject.GetComponent<CapsuleCollider>().tag == "ClicCollider")
+                {
+                    hitObject = hitObj.transform.root.gameObject;
+                }
             }
-        }*/
+        }
+            
 
-        if (Physics.Raycast(ray, out hitInfo, 100, 9) || Physics.Raycast(ray, out hitInfo, 100, 10))
+        /*if (Physics.Raycast(ray.origin, ray.direction *100, out hitInfo) && hitInfo.transform.gameObject.tag == "Worker")
         {
             hitObject = hitInfo.transform.root.gameObject;
 
@@ -31,7 +39,7 @@ public class SelectObjectManager : MonoBehaviour {
             {
                 SelectObject(hitObject);
             }
-        }
+        }*/
     }
 
     void SelectObject(GameObject obj)
