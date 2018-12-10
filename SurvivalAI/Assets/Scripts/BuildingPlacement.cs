@@ -6,7 +6,7 @@ public class BuildingPlacement : MonoBehaviour {
 
     public float scrollSensitivity;
 
-    public GameObject mainCamera;
+    public Camera mainCamera;
 
     public ConstructionManager constructionManager;
 
@@ -21,17 +21,24 @@ public class BuildingPlacement : MonoBehaviour {
 
     private PlaceableBuilding placeableBuildingOld;
 
+    private void Start()
+    {
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+    }
+
     void Update()
     {
-        Vector3 m = Input.mousePosition;
-        m = new Vector3(m.x, m.y, transform.position.y);
-        Vector3 p = mainCamera.GetComponent<Camera>().ScreenToWorldPoint(m);
+        Ray mouseRay = mainCamera.ScreenPointToRay(Input.mousePosition);
+        Plane xy = new Plane(Vector3.up, new Vector3(0, 0, mainCamera.transform.position.y));
+        float distance;
+        xy.Raycast(mouseRay, out distance);
+        Vector3 p = mouseRay.GetPoint(distance);
 
         if (currentBuilding != null)
         {
             if(!hasPlaced)
             {
-                currentBuilding.position = new Vector3(p.x, 0, p.z);
+                currentBuilding.position = p;
             }
 
             if (Input.GetMouseButtonDown(0))
