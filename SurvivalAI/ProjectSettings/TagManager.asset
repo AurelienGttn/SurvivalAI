@@ -13,6 +13,7 @@ TagManager:
   - Worker
   - FxTemporaire
   - Building
+  - ClicCollider
   layers:
   - Default
   - TransparentFX
@@ -25,11 +26,9 @@ TagManager:
   - PostProcessing
   - Player
   - Building
-  - 
+  - Selection
   - 
   - Enemy
-  - 
-  - 
   - 
   - 
   - 

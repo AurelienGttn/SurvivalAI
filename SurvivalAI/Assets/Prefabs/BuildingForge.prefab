@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 114167818270707424}
   - component: {fileID: 136631891701062792}
   - component: {fileID: 114263580329984252}
+  - component: {fileID: 114622617082883864}
   m_Layer: 10
   m_Name: BuildingForge
   m_TagString: Building
@@ -177,7 +178,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1839884260124900}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 19.34771, y: 1.0499992, z: -2.2299733}
+  m_LocalPosition: {x: 4.6, y: 1.0499992, z: -6.3}
   m_LocalScale: {x: 3, y: 1, z: 3}
   m_Children:
   - {fileID: 4613728540458436}
@@ -342,18 +343,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colliders: []
   type: 0
+  constructionManager: {fileID: 0}
   isConstructed: 0
   health: 0
   normal: {fileID: 2100000, guid: df8000359b365114f86d7653ad6ac100, type: 2}
   fade: {fileID: 2100000, guid: 5b04719281959584092121bbb7630cad, type: 2}
-  attributedWood: 169050
-  attributedStone: 169050
   neededWood: 0
   neededStone: 0
-  attributedWoodText: {fileID: 0}
-  attributedStoneText: {fileID: 0}
-  neededWoodText: {fileID: 0}
-  neededStoneText: {fileID: 0}
   buildingUI: {fileID: 1796195227645702}
 --- !u!114 &114197421993969452
 MonoBehaviour:
@@ -514,6 +510,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 0}
+--- !u!114 &114622617082883864
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1839884260124900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d5c1d5aa7e39a4e8ad9cd5fc61d2e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  researchUI: {fileID: 0}
 --- !u!114 &114627338521875222
 MonoBehaviour:
   m_ObjectHideFlags: 1

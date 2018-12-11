@@ -23,6 +23,7 @@ public class WorkerBT : MonoBehaviour {
     public int maxResources = 25;
     public int resourcesCarried;
     private float exactResourcesCarried = 0;
+    public float gatheringSpeed = 0.5f;
     public ResourceTypes currentlyGathering = ResourceTypes.None;
     private ResourceTypes highestPriorityResource;
     private Transform resourceToGather;
@@ -324,7 +325,7 @@ public class WorkerBT : MonoBehaviour {
         energy.value = Mathf.Ceil(exactEnergy);
         animator.SetFloat("Energy", energy.value);
         // Set it low enough to have several animations
-        exactResourcesCarried += 0.5f;
+        exactResourcesCarried += gatheringSpeed;
         resourcesCarried = (int)Mathf.Floor(exactResourcesCarried);
         resourceToGather.GetComponent<HealthManager>().TakeDamage(0.05f);
 
