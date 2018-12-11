@@ -38,12 +38,14 @@ public class ResourceManager : MonoBehaviour {
     private int multiplier = 3;
     private int workersConsumption;     // How much food those workers consume every minute
     private float currentFood;          // Keep the exact food quantity as a float
+    private int cultureCount;           // How many constructed culture
 
     public ConstructionManager constructionManager;
+    public BuildingManager buildingManager;
 
     void Start () {
-        resourcesAvailable.Add(ResourceTypes.Wood, 200);
-        resourcesAvailable.Add(ResourceTypes.Stone, 200);
+        resourcesAvailable.Add(ResourceTypes.Wood, 1000);
+        resourcesAvailable.Add(ResourceTypes.Stone, 1000);
 
         resourcesCapacity.Add(ResourceTypes.Wood, 1000);
         resourcesCapacity.Add(ResourceTypes.Stone, 1000);
@@ -72,9 +74,18 @@ public class ResourceManager : MonoBehaviour {
 
     private void Update()
     {
+        cultureCount = 0;
+        foreach(PlaceableBuilding c in buildingManager.constructedBuildings)
+        {
+            if (c.gameObject.name == "BuildingCulture" && c.isConstructed == true)
+            {
+                cultureCount += 1;
+            }
+        }
+
         // Update food consumption
         workerCount = FindObjectOfType<WorkersManager>().workers.Count;
-        workersConsumption = 20 + (int)Mathf.Pow(workerCount, 3);
+        workersConsumption = baseConsumption - 5 * cultureCount + (int)Mathf.Pow(workerCount, multiplier);
         resourcesConsumption[ResourceTypes.Food] = workersConsumption;
 
 

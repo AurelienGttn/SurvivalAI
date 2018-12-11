@@ -177,7 +177,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1695705808442090}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.968443, y: 1.0500026, z: -5.574437}
+  m_LocalPosition: {x: -2.9924173, y: 1.0500028, z: -4.456474}
   m_LocalScale: {x: 3, y: 1, z: 3}
   m_Children:
   - {fileID: 4543632703808786}
@@ -487,18 +487,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colliders: []
   type: 1
+  constructionManager: {fileID: 0}
   isConstructed: 0
   health: 0
   normal: {fileID: 2100000, guid: d7ed3f896b8c0764baea573fbc15c8c1, type: 2}
   fade: {fileID: 2100000, guid: 5cbc4efbeb1388944b73e5ec12070ad0, type: 2}
-  attributedWood: 50
-  attributedStone: 0
   neededWood: 0
   neededStone: 0
-  attributedWoodText: {fileID: 0}
-  attributedStoneText: {fileID: 0}
-  neededWoodText: {fileID: 0}
-  neededStoneText: {fileID: 0}
   buildingUI: {fileID: 1004071224478320}
 --- !u!114 &114863797494813668
 MonoBehaviour:
