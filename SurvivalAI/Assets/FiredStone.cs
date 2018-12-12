@@ -7,7 +7,8 @@ public class FiredStone : MonoBehaviour {
     private Transform target;
 
     public float speed = 10f;
-    public GameObject impactEffect;
+    public float damage = 10f;
+    //public GameObject impactEffect;
 
     public void Seek(Transform _target)
     {
@@ -36,11 +37,7 @@ public class FiredStone : MonoBehaviour {
 
     void HitTarget()
     {
-        target.gameObject.GetComponent<HealthManager>().TakeDamage(10);
-
-        GameObject effectIns = Instantiate(impactEffect, transform.position, transform.rotation);
-
-        Destroy(effectIns, 2f);
+        target.gameObject.GetComponent<HealthManager>().TakeDamage(damage);
         Destroy(gameObject);
     }
 }

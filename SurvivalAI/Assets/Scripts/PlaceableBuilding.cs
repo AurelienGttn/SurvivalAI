@@ -28,8 +28,6 @@ public class PlaceableBuilding : MonoBehaviour {
 
     [SerializeField] private GameObject buildingUI;
 
-    private bool isSelected;
-
     public enum BuildingTypes
     {
         Forge,
@@ -160,10 +158,5 @@ public class PlaceableBuilding : MonoBehaviour {
         {
             colliders.Remove(c);
         }
-    }
-
-    public void SetSelected(bool s)
-    {
-        isSelected = s;
     }
 }

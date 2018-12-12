@@ -74,7 +74,6 @@ public class WorkerBT : MonoBehaviour {
         // Navigation
         agent = GetComponent<NavMeshAgent>();
         agent.avoidancePriority = Random.Range(1, 99);
-        agent.enabled = true;
 
         // Resting
         mainBuilding = GameObject.Find("MainBuilding").transform;
@@ -226,7 +225,7 @@ public class WorkerBT : MonoBehaviour {
             float matingChance = 1f / (workersManager.workers.Count * 2 - 1) / 200;
             if (Random.Range(0f, 1f) < matingChance)
             {
-                Instantiate(matingFX, new Vector3(0, 1, 0), Quaternion.identity);
+                Instantiate(matingFX, new Vector3(0, 5, 0), Quaternion.identity);
                 StartCoroutine(Gestation());
                 canMate = false;
             }
@@ -249,8 +248,9 @@ public class WorkerBT : MonoBehaviour {
         return true;
     }
 
-    // Choose the resource to collect based on how much is needed
-    // and how many workers are already collecting this resource
+    // Choose the resource to collect based on how much is needed,
+    // how much we have and how many workers are already collecting
+    // this resource.
     [Task]
     void ChooseResource()
     {
@@ -259,7 +259,7 @@ public class WorkerBT : MonoBehaviour {
         {
             int currentWorkers = workersManager.gatheringWorkers[resource.Key];
             // Add 1 to avoid dividing by 0
-            float new_resourcePriority = resource.Value / (currentWorkers + 1);
+            float new_resourcePriority = Mathf.Clamp(resource.Value - resourceManager.resourcesAvailable[resource.Key], 1, Mathf.Infinity) / (currentWorkers + 1);
             if (new_resourcePriority > resourcePriority)
             {
                 highestPriorityResource = resource.Key;
@@ -359,7 +359,6 @@ public class WorkerBT : MonoBehaviour {
     }
     #endregion
 
-
     #region Building actions
 
     [Task]
@@ -373,10 +372,6 @@ public class WorkerBT : MonoBehaviour {
         if (constructionManager.waitingList.Count > 0)
         {
             currentlyBuilding = constructionManager.waitingList[0].transform;
-        }
-        else
-        {
-            workersManager.buildingWorkers--;
         }
 
         pickaxe.SetActive(false);

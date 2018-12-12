@@ -7,13 +7,14 @@ public class Spawner : MonoBehaviour {
     [SerializeField] private Transform[] spawnLocations;
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private int numberOfEnemies;
+    [SerializeField] private int firstWaveTime;
     [SerializeField] private float spawnDelay;
     public Vector3 spawnZone;
     public Transform enemiesParent;
     
 	void Start ()
     {
-        InvokeRepeating("Spawn", spawnDelay, spawnDelay);
+        InvokeRepeating("Spawn", firstWaveTime, spawnDelay);
 	}
 
     private void Spawn()
@@ -26,7 +27,7 @@ public class Spawner : MonoBehaviour {
             if(spawnerIndex % 2 == 0)
                 randomPos = new Vector3(randomPos.x + Random.Range(-spawnZone.x / 2, spawnZone.x / 2), 1, randomPos.z + Random.Range(-spawnZone.z / 2, spawnZone.z / 2));
             else
-                randomPos = new Vector3(randomPos.z + Random.Range(-spawnZone.z / 2, spawnZone.z / 2), 1, randomPos.x + Random.Range(-spawnZone.x / 2, spawnZone.x / 2));
+                randomPos = new Vector3(randomPos.x + Random.Range(-spawnZone.z / 2, spawnZone.z / 2), 1, randomPos.z + Random.Range(-spawnZone.x / 2, spawnZone.x / 2));
             Instantiate(enemyPrefab, randomPos, Quaternion.identity, enemiesParent);
         }
     }

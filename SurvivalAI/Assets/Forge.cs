@@ -4,15 +4,26 @@ using UnityEngine;
 
 public class Forge : MonoBehaviour {
 
-    public GameObject text;
-    public GameObject researchUI;
+    private GameObject unavailableText;
+    private GameObject researchUI;
+    private int upgradeCount;
+
+    private void Start()
+    {
+        unavailableText = GameObject.Find("Instructions");
+        researchUI = GameObject.Find("ResearchOptions");
+        upgradeCount = researchUI.transform.childCount;
+    }
 
     private void Update()
     {
-        if(this.GetComponent<PlaceableBuilding>().isConstructed)
+        if(GetComponent<PlaceableBuilding>().isConstructed)
         {
-            text.SetActive(false);
-            researchUI.SetActive(true);
+            unavailableText.SetActive(false);
+            for (int i = 0; i < upgradeCount; i++)
+            {
+                researchUI.transform.GetChild(i).gameObject.SetActive(true);
+            }
         }
 
     }

@@ -1003,6 +1003,7 @@ MonoBehaviour:
   matingFX: {fileID: 19800004, guid: 3af6f68141914ca43ba39b2403757bd0, type: 2}
   maxResources: 25
   resourcesCarried: 0
+  gatheringSpeed: 0.5
   currentlyGathering: 0
   axe: {fileID: 1442334906389286}
   pickaxe: {fileID: 1257749925320418}

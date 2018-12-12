@@ -17,7 +17,7 @@ public class HealthManager : MonoBehaviour {
     
 	void Start ()
     {
-        if (tag == "Building")
+        if (tag == "Building" || tag == "Warehouse")
             currentHealth = 1;
         else 
             currentHealth = maxHealth;
