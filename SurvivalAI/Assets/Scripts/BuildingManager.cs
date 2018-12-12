@@ -25,19 +25,19 @@ public class BuildingManager : MonoBehaviour {
     {
         buildingPlacement = GetComponent<BuildingPlacement>();
 
-        buildingInfo.Add(BuildingTypes.Forge, "Make available researchs' menu");
+        buildingInfo.Add(BuildingTypes.Forge, "Unlock research menu.");
         necessaryWood.Add(BuildingTypes.Forge, 200);
         necessaryStone.Add(BuildingTypes.Forge, 200);
 
-        buildingInfo.Add(BuildingTypes.Culture, "Make grow food and give a low increase of food each seconds");
+        buildingInfo.Add(BuildingTypes.Culture, "Reduces food consumption by 20.");
         necessaryWood.Add(BuildingTypes.Culture, 150);
         necessaryStone.Add(BuildingTypes.Culture, 100);
 
-        buildingInfo.Add(BuildingTypes.Entrepot, "It's where peasants bring back gathered resources, it also increase maximum resources");
+        buildingInfo.Add(BuildingTypes.Entrepot, "Increases storage. Peasants will bring resources to closest warehouse.");
         necessaryWood.Add(BuildingTypes.Entrepot, 150);
         necessaryStone.Add(BuildingTypes.Entrepot, 150);
 
-        buildingInfo.Add(BuildingTypes.Tower, "Shoot stones on nearby enemies");
+        buildingInfo.Add(BuildingTypes.Tower, "Shoots stones at nearby enemies.");
         necessaryWood.Add(BuildingTypes.Tower, 100);
         necessaryStone.Add(BuildingTypes.Tower, 100);
     }

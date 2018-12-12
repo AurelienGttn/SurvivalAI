@@ -407,7 +407,6 @@ public class WorkerBT : MonoBehaviour {
         else if (currentlyBuilding != null)
         {
             HealthManager healthManager = currentlyBuilding.GetComponent<HealthManager>();
-
             animator.SetBool("IsBuilding", true);
             exactEnergy -= 0.5f;
             energy.value = Mathf.Ceil(exactEnergy);

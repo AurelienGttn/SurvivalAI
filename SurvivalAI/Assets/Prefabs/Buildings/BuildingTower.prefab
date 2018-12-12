@@ -204,7 +204,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1800494417046628}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.2454953, y: 1.0000006, z: -2.1020832}
+  m_LocalPosition: {x: 4.05099, y: 1.0000001, z: -6.223552}
   m_LocalScale: {x: 1.5, y: 3, z: 1.5}
   m_Children:
   - {fileID: 4791904436788000}
@@ -391,7 +391,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colliders: []
-  type: 5
+  type: 3
   constructionManager: {fileID: 0}
   isConstructed: 0
   health: 0
@@ -399,6 +399,7 @@ MonoBehaviour:
   fade: {fileID: 2100000, guid: 7b2523d395cb6ad449e0a904c590fe5e, type: 2}
   neededWood: 0
   neededStone: 0
+  infos: 
   buildingUI: {fileID: 1539387825518482}
 --- !u!114 &114197481049055970
 MonoBehaviour:
@@ -457,7 +458,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 100
   m_WholeNumbers: 1
-  m_Value: 100
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

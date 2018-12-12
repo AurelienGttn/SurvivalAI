@@ -7,6 +7,7 @@ public class Spawner : MonoBehaviour {
     [SerializeField] private Transform[] spawnLocations;
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private int numberOfEnemies;
+    private float exactEnemyCount;
     [SerializeField] private int firstWaveTime;
     [SerializeField] private float spawnDelay;
     public Vector3 spawnZone;
@@ -15,6 +16,7 @@ public class Spawner : MonoBehaviour {
 	void Start ()
     {
         InvokeRepeating("Spawn", firstWaveTime, spawnDelay);
+        exactEnemyCount = numberOfEnemies;
 	}
 
     private void Spawn()
@@ -30,6 +32,8 @@ public class Spawner : MonoBehaviour {
                 randomPos = new Vector3(randomPos.x + Random.Range(-spawnZone.z / 2, spawnZone.z / 2), 1, randomPos.z + Random.Range(-spawnZone.x / 2, spawnZone.x / 2));
             Instantiate(enemyPrefab, randomPos, Quaternion.identity, enemiesParent);
         }
+        exactEnemyCount *= 1.2f;
+        numberOfEnemies = Mathf.FloorToInt(exactEnemyCount);
     }
 
     private void OnDrawGizmos()

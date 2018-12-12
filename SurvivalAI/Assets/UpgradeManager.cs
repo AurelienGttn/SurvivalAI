@@ -23,7 +23,7 @@ public class UpgradeManager : MonoBehaviour
 
     private void Awake()
     {
-        upgradeInfo.Add(UpgradeTypes.Damage, "Increase DoucheBag Heros damages");
+        upgradeInfo.Add(UpgradeTypes.Damage, "Increase Douchebag Hero's damage");
         upgradeInfo.Add(UpgradeTypes.GatherSpeed, "Increase peasants gathering speed");
         upgradeInfo.Add(UpgradeTypes.MaxBagStorage, "Increase peasants max carried resources");
 

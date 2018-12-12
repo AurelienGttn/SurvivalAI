@@ -28,8 +28,6 @@ public class PlaceableBuilding : MonoBehaviour {
     public string infos;
 
     [SerializeField] private GameObject buildingUI;
-
-    private bool isSelected;
     
     private void Start()
     {
@@ -145,10 +143,5 @@ public class PlaceableBuilding : MonoBehaviour {
         {
             colliders.Remove(c);
         }
-    }
-
-    public void SetSelected(bool s)
-    {
-        isSelected = s;
     }
 }
