@@ -11,7 +11,7 @@ public class PlaceableBuilding : MonoBehaviour {
     [HideInInspector]
     public List<Collider> colliders = new List<Collider>();
 
-    public BuildingTypes type;
+    public BuildingManager.BuildingTypes type;
     public ConstructionManager constructionManager;
     private BuildingManager buildingManager;
     private ResourceManager resourceManager;
@@ -25,19 +25,12 @@ public class PlaceableBuilding : MonoBehaviour {
     
     public int neededWood;
     public int neededStone;
+    public string infos;
 
     [SerializeField] private GameObject buildingUI;
 
-    public enum BuildingTypes
-    {
-        Forge,
-        Culture,
-        Mine,
-        Entrepot,
-        House,
-        Tower
-    }
-
+    private bool isSelected;
+    
     private void Start()
     {
         buildingsParent = GameObject.Find("Buildings");
@@ -49,34 +42,28 @@ public class PlaceableBuilding : MonoBehaviour {
 
         switch (type)
         {
-            case BuildingTypes.Forge:
-                neededWood = 200;
-                neededStone = 200;
+            case BuildingManager.BuildingTypes.Forge:
+                infos = buildingManager.buildingInfo[BuildingManager.BuildingTypes.Forge];
+                neededWood = buildingManager.necessaryWood[BuildingManager.BuildingTypes.Forge];
+                neededStone = buildingManager.necessaryStone[BuildingManager.BuildingTypes.Forge];
                 maxHealth = 200;
                 break;
-            case BuildingTypes.Culture:
-                neededWood = 150;
-                neededStone = 100;
+            case BuildingManager.BuildingTypes.Culture:
+                infos = buildingManager.buildingInfo[BuildingManager.BuildingTypes.Forge];
+                neededWood = buildingManager.necessaryWood[BuildingManager.BuildingTypes.Culture];
+                neededStone = buildingManager.necessaryStone[BuildingManager.BuildingTypes.Culture];
                 maxHealth = 200;
                 break;
-            case BuildingTypes.Mine:
-                neededWood = 100;
-                neededStone = 150;
+            case BuildingManager.BuildingTypes.Entrepot:
+                infos = buildingManager.buildingInfo[BuildingManager.BuildingTypes.Forge];
+                neededWood = buildingManager.necessaryWood[BuildingManager.BuildingTypes.Entrepot];
+                neededStone = buildingManager.necessaryStone[BuildingManager.BuildingTypes.Entrepot];
                 maxHealth = 200;
                 break;
-            case BuildingTypes.Entrepot:
-                neededWood = 150;
-                neededStone = 150;
-                maxHealth = 200;
-                break;
-            case BuildingTypes.House:
-                neededWood = 300;
-                neededStone = 300;
-                maxHealth = 500;
-                break;
-            case BuildingTypes.Tower:
-                neededWood = 100;
-                neededStone = 100;
+            case BuildingManager.BuildingTypes.Tower:
+                infos = buildingManager.buildingInfo[BuildingManager.BuildingTypes.Forge];
+                neededWood = buildingManager.necessaryWood[BuildingManager.BuildingTypes.Tower];
+                neededStone = buildingManager.necessaryStone[BuildingManager.BuildingTypes.Tower];
                 maxHealth = 200;
                 break;
             default:
@@ -158,5 +145,10 @@ public class PlaceableBuilding : MonoBehaviour {
         {
             colliders.Remove(c);
         }
+    }
+
+    public void SetSelected(bool s)
+    {
+        isSelected = s;
     }
 }
