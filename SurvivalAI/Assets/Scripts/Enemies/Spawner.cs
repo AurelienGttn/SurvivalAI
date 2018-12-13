@@ -32,7 +32,7 @@ public class Spawner : MonoBehaviour {
                 randomPos = new Vector3(randomPos.x + Random.Range(-spawnZone.z / 2, spawnZone.z / 2), 1, randomPos.z + Random.Range(-spawnZone.x / 2, spawnZone.x / 2));
             Instantiate(enemyPrefab, randomPos, Quaternion.identity, enemiesParent);
         }
-        exactEnemyCount *= 1.2f;
+        exactEnemyCount = Mathf.Clamp(1.2f * exactEnemyCount, 1, 20);
         numberOfEnemies = Mathf.FloorToInt(exactEnemyCount);
     }
 

@@ -127,6 +127,8 @@ public class ResourceManager : MonoBehaviour {
 
     public void AddResource(ResourceTypes resourceType, int resourceQuantity)
     {
+        if (resourcesAvailable[resourceType] >= resourcesCapacity[resourceType])
+            return;
         if (resourceType == ResourceTypes.Wood)
             resourcesAvailable[ResourceTypes.Wood] += resourceQuantity;
         else if (resourceType == ResourceTypes.Stone)

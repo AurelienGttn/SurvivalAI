@@ -1001,9 +1001,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   workerPrefab: {fileID: 1785519770190304}
   matingFX: {fileID: 19800004, guid: 3af6f68141914ca43ba39b2403757bd0, type: 2}
-  maxResources: 25
+  maxResources: 50
   resourcesCarried: 0
-  gatheringSpeed: 0.5
+  gatheringSpeed: 1
   currentlyGathering: 0
   axe: {fileID: 1442334906389286}
   pickaxe: {fileID: 1257749925320418}
@@ -1223,7 +1223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathAnimation: {fileID: 198330214428362902, guid: a97415c6b57076f41a6621a7b51d63a3,
     type: 2}
-  maxHealth: 100
+  maxHealth: 5
   currentHealth: 0
   healthBar: {fileID: 114520895748451570}
 --- !u!114 &114520895748451570

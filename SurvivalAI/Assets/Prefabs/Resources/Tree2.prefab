@@ -286,7 +286,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathAnimation: {fileID: 198499209413112314, guid: f01c1eba69de19e44b04d8d651aaac37,
     type: 2}
-  maxHealth: 100
+  maxHealth: 20
   currentHealth: 0
   healthBar: {fileID: 0}
 --- !u!208 &208878380094613452
