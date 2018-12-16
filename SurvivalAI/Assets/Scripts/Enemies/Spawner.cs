@@ -7,16 +7,16 @@ public class Spawner : MonoBehaviour {
     [SerializeField] private Transform[] spawnLocations;
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private int numberOfEnemies;
-    private float exactEnemyCount;
     [SerializeField] private int firstWaveTime;
     [SerializeField] private float spawnDelay;
     public Vector3 spawnZone;
     public Transform enemiesParent;
+    private int waveNumber;
     
 	void Start ()
     {
         InvokeRepeating("Spawn", firstWaveTime, spawnDelay);
-        exactEnemyCount = numberOfEnemies;
+        waveNumber = 1;
 	}
 
     private void Spawn()
@@ -30,10 +30,18 @@ public class Spawner : MonoBehaviour {
                 randomPos = new Vector3(randomPos.x + Random.Range(-spawnZone.x / 2, spawnZone.x / 2), 1, randomPos.z + Random.Range(-spawnZone.z / 2, spawnZone.z / 2));
             else
                 randomPos = new Vector3(randomPos.x + Random.Range(-spawnZone.z / 2, spawnZone.z / 2), 1, randomPos.z + Random.Range(-spawnZone.x / 2, spawnZone.x / 2));
-            Instantiate(enemyPrefab, randomPos, Quaternion.identity, enemiesParent);
+            GameObject newEnemy = Instantiate(enemyPrefab, randomPos, Quaternion.identity, enemiesParent);
+            newEnemy.GetComponent<HealthManager>().maxHealth *= waveNumber;
         }
-        exactEnemyCount = Mathf.Clamp(1.2f * exactEnemyCount, 1, 20);
-        numberOfEnemies = Mathf.FloorToInt(exactEnemyCount);
+        if (numberOfEnemies == 10)
+        {
+            waveNumber++;
+            numberOfEnemies = 5;
+        }
+        else
+        {
+            numberOfEnemies++;
+        }
     }
 
     private void OnDrawGizmos()

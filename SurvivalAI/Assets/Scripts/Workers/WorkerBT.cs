@@ -129,7 +129,7 @@ public class WorkerBT : MonoBehaviour {
     // Create a new worker as a result of mating
     private void CreateNewWorker()
     {
-        Instantiate(workerPrefab, new Vector3(3,1,3), Quaternion.identity, workersParent);
+        Instantiate(workerPrefab, new Vector3(2, 1, 1), Quaternion.identity, workersParent);
     }
 
     #endregion
@@ -223,7 +223,7 @@ public class WorkerBT : MonoBehaviour {
         if(canMate)
         {
             float matingChance = 1f / (workersManager.workers.Count * 2 - 1) / 200;
-            if (Random.Range(0f, 1f) < matingChance)
+            if (workersManager.workers.Count == 1 || Random.Range(0f, 1f) < matingChance)
             {
                 Instantiate(matingFX, new Vector3(0, 5, 0), Quaternion.identity);
                 StartCoroutine(Gestation());
@@ -257,13 +257,16 @@ public class WorkerBT : MonoBehaviour {
         float resourcePriority = 0;
         foreach (KeyValuePair<ResourceTypes, float> resource in resourceManager.resourcesConsumption)
         {
-            int currentWorkers = workersManager.gatheringWorkers[resource.Key];
-            // Add 1 to avoid dividing by 0
-            float new_resourcePriority = Mathf.Clamp(resource.Value - resourceManager.resourcesAvailable[resource.Key], 1, Mathf.Infinity) / (currentWorkers + 1);
-            if (new_resourcePriority > resourcePriority)
+            if (resourceManager.resourcesAvailable[resource.Key] < resourceManager.resourcesCapacity[resource.Key])
             {
-                highestPriorityResource = resource.Key;
-                resourcePriority = new_resourcePriority;
+                int currentWorkers = workersManager.gatheringWorkers[resource.Key];
+                // Add 1 to avoid dividing by 0
+                float new_resourcePriority = Mathf.Clamp(resource.Value - resourceManager.resourcesAvailable[resource.Key], 1, Mathf.Infinity) / (currentWorkers + 1);
+                if (new_resourcePriority > resourcePriority)
+                {
+                    highestPriorityResource = resource.Key;
+                    resourcePriority = new_resourcePriority;
+                }
             }
         }
         if (currentlyGathering == ResourceTypes.None)

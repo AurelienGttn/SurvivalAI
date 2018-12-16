@@ -42,6 +42,10 @@ public class HealthManager : MonoBehaviour {
             // Check if the animation has already been played
             if (!isDead)
             {
+                if (tag == "Worker")
+                {
+                    FindObjectOfType<WorkersManager>().workers.Remove(GetComponent<WorkerBT>());
+                }
                 foreach (Renderer renderer in m_renderer)
                 {
                     renderer.enabled = false;
