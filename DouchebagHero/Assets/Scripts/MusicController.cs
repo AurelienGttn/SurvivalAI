@@ -10,7 +10,7 @@ public class MusicController : MonoBehaviour {
 
 	void Start () {
         mainMusic = GetComponent<AudioSource>();
-        volumeSlider.value = PlayerPrefs.GetFloat("mainVolume");
+        volumeSlider.value = PlayerPrefs.GetFloat("mainVolume", 0.75f);
         mainMusic.volume = volumeSlider.value;
 	}
 
