@@ -90,6 +90,11 @@ public class WorkerBT : MonoBehaviour {
 
     private void Update()
     {
+        // Don't go through the BT if the game is paused
+        if (Time.timeScale == 1)
+        {
+            GetComponent<PandaBehaviour>().Tick();
+        }
         if (agent.hasPath)
         {
             transform.LookAt(new Vector3(agent.destination.x, transform.position.y, agent.destination.z));
@@ -110,10 +115,14 @@ public class WorkerBT : MonoBehaviour {
     // with the normalized distance and the scale of the object.
     private Vector3 GetClosestBound(Transform target)
     {
-        Vector3 targetClosestBound = (transform.position - target.position).normalized;
-        targetClosestBound = targetClosestBound * target.localScale.x / 2 + target.position;
+        if (target != null)
+        {
+            Vector3 targetClosestBound = (transform.position - target.position).normalized;
+            targetClosestBound = targetClosestBound * target.localScale.x / 2 + target.position;
 
-        return targetClosestBound;
+            return targetClosestBound;
+        }
+        return Vector3.zero;
     }
 
     // As in the real world, wait a little before giving birth

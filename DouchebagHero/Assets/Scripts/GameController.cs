@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
@@ -7,6 +9,7 @@ public class GameController : MonoBehaviour
     private bool started;
 
     [SerializeField] GameObject mainMenu;
+    [SerializeField] GameObject settingsMenu;
     [SerializeField] GameObject pauseMenu;
     [SerializeField] GameObject gameOverMenu;
     [SerializeField] GameObject gameUI;
@@ -15,6 +18,7 @@ public class GameController : MonoBehaviour
     {
         gameOver = false;
         started  = false;
+        mainMenu.SetActive(true);
     }
 
     private void Update()
@@ -22,21 +26,17 @@ public class GameController : MonoBehaviour
         if (!started)
         {
             Time.timeScale = 0;
-            mainMenu.SetActive(true);
             gameUI.SetActive(false);
         }
 
         if (gameOver)
         {
-            Time.timeScale = 0;
-            gameOverMenu.SetActive(true);
+            StartCoroutine(GameOver());
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
             Pause();
         }
-
-
     }
 
     public void PlayGame()
@@ -45,6 +45,34 @@ public class GameController : MonoBehaviour
         gameUI.SetActive(true);
         started = true;
         Time.timeScale = 1;
+    }
+
+    public void ShowSettings()
+    {
+        if (settingsMenu.activeSelf)
+        {
+            settingsMenu.SetActive(false);
+            if (!started)
+            {
+                mainMenu.SetActive(true);
+            }
+            else
+            {
+                pauseMenu.SetActive(true);
+            }
+        }
+        else
+        {
+            if (!started)
+            {
+                mainMenu.SetActive(false);
+            }
+            else
+            {
+                pauseMenu.SetActive(false);
+            }
+            settingsMenu.SetActive(true);
+        }
     }
 
     public void Pause()
@@ -61,7 +89,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void StartGame()
+    public void RestartGame()
     {
         SceneManager.LoadScene("BaseMap");
     }
@@ -69,5 +97,13 @@ public class GameController : MonoBehaviour
     public void Exit()
     {
         Application.Quit();
+    }
+
+    private IEnumerator GameOver()
+    {
+        yield return new WaitForSeconds(1);
+
+        Time.timeScale = 0;
+        gameOverMenu.SetActive(true);
     }
 }

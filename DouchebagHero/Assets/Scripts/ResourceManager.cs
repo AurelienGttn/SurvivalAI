@@ -94,7 +94,7 @@ public class ResourceManager : MonoBehaviour {
     private void Update()
     {
         // Game is lost if food goes below 0
-        if (resourcesAvailable[ResourceTypes.Food] <= 0)
+        if (resourcesAvailable[ResourceTypes.Food] < 0)
         {
             GameController.gameOver = true;
         }

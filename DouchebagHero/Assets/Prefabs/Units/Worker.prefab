@@ -1050,7 +1050,7 @@ MonoBehaviour:
   scripts:
   - {fileID: 4900000, guid: 96ccb568f96543c4d9b7631b0e1220f9, type: 3}
   autoReset: 1
-  tickOn: 0
+  tickOn: 3
   sourceInfos:
   - isFoldout: 1
     breakPoints: 
