@@ -18,17 +18,19 @@ public class EnemyAI : MonoBehaviour {
 
     public bool isAttacking;
     private bool canAttack;
+    [SerializeField] private float attackCooldown = 1;
     public Transform target;
     
     void Start () {
-        if(GameObject.FindGameObjectWithTag("MainBuilding"))
-            mainBuilding = GameObject.FindGameObjectWithTag("MainBuilding").transform;
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         agent.enabled = true;
         obstacle = GetComponent<NavMeshObstacle>();
         obstacle.enabled = false;
         agent.avoidancePriority = Random.Range(1, 99);
+
+        if (GameObject.FindGameObjectWithTag("MainBuilding"))
+            mainBuilding = GameObject.FindGameObjectWithTag("MainBuilding").transform;
         target = mainBuilding;
         agent.destination = GetClosestBound();
 
@@ -39,21 +41,18 @@ public class EnemyAI : MonoBehaviour {
     void FixedUpdate()
     {
         // If there's already a target, check if it's still in range
-        if (animator.GetBool("isAttacking"))
+        if (animator.GetBool("Locked"))
         {
             Transform target_temp = CheckAttackRange();
-            if (target_temp != null && target_temp.name == target.name)
-            {
+            if (target_temp == null || target_temp.name != target.name)
+                animator.SetBool("Locked", false);
+            else {
                 // and attack it if cooldown is up
                 if (canAttack)
                 {
                     Attack();
                     CheckEnemyLife();
                 }
-            }
-            else
-            {
-                animator.SetBool("isAttacking", false);
             }
         }
 
@@ -64,6 +63,7 @@ public class EnemyAI : MonoBehaviour {
             target = CheckAttackRange();
             if (target != null)
             {
+                animator.SetBool("Locked", true);
                 enemyHealth = target.GetComponent<HealthManager>();
                 // If the attack is not on cooldown, attack enemy then check if he's dead
                 if (canAttack)
@@ -80,8 +80,42 @@ public class EnemyAI : MonoBehaviour {
                 // Make sure the target isn't out of aggro zone
                 if (target != null)
                 {
+                    animator.SetBool("Locked", true);
                     CheckDistanceFromTarget();
                 }
+            }
+        }
+    }
+
+    private void Attack() {
+        animator.SetBool("isAttacking", true);
+        agent.enabled = false;
+        obstacle.enabled = true;
+        canAttack = false;
+
+        if (enemyHealth != null)
+            enemyHealth.TakeDamage(damage);
+
+        StartCoroutine(AttackCooldown());
+    }
+
+    private IEnumerator AttackCooldown()
+    {
+        yield return new WaitForSeconds(attackCooldown);
+        animator.SetBool("isAttacking", false);
+        canAttack = true;
+    }
+
+    // If enemy is dead, reinitialize target
+    private void CheckEnemyLife()
+    {
+        if (enemyHealth != null)
+        {
+            if (enemyHealth.currentHealth <= 0)
+            {
+                animator.SetBool("isAttacking", false);
+                target = mainBuilding;
+                GetClosestBound();
             }
         }
     }
@@ -94,32 +128,6 @@ public class EnemyAI : MonoBehaviour {
             return withinAttackRange[0].transform;
         }
         return null;
-    }
-
-    private void Attack() {
-        animator.SetBool("isAttacking", true);
-        agent.enabled = false;
-        obstacle.enabled = true;
-        canAttack = false;
-        enemyHealth.TakeDamage(damage);
-        StartCoroutine(AttackCooldown());
-    }
-
-    private IEnumerator AttackCooldown()
-    {
-        yield return new WaitForSeconds(0.5f);
-        canAttack = true;
-    }
-
-    // If enemy is dead, reinitialize target
-    private void CheckEnemyLife()
-    {
-        if (enemyHealth.currentHealth <= 0)
-        {
-            animator.SetBool("isAttacking", false);
-            target = mainBuilding;
-            GetClosestBound();
-        }
     }
 
     private Transform CheckAggroZone()

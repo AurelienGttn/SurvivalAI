@@ -20,7 +20,7 @@ public class FiringTower : MonoBehaviour {
 
     private void Update()
     {
-        if(this.GetComponent<PlaceableBuilding>().isConstructed == true)
+        if(this.GetComponent<Building>().isConstructed == true)
         {
             if (fireCountDown <= 0f)
             {

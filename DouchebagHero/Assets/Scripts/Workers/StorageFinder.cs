@@ -35,12 +35,15 @@ public class StorageFinder : MonoBehaviour
         for (int i = 0; i < warehouses.Length; i++)
         {
             Transform warehouse = warehouses[i].transform;
-            directionToTarget = warehouse.position - currentPosition;
-            dSqrToTarget = directionToTarget.sqrMagnitude;
-            if (dSqrToTarget < closestDistance)
+            if (warehouse.GetComponent<Building>().isConstructed)
             {
-                closestDistance = dSqrToTarget;
-                closestWarehouse = warehouse;
+                directionToTarget = warehouse.position - currentPosition;
+                dSqrToTarget = directionToTarget.sqrMagnitude;
+                if (dSqrToTarget < closestDistance)
+                {
+                    closestDistance = dSqrToTarget;
+                    closestWarehouse = warehouse;
+                }
             }
         }
 

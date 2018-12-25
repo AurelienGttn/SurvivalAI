@@ -9,7 +9,7 @@ public class WorkerAnimator : MonoBehaviour
     private Animator animator;
     private WorkerBT workerBT;
     private WorkersManager workersManager;
-    private ConstructionManager constructionManager;
+    private BuildingManager buildingManager;
 
     private void Start()
     {
@@ -17,7 +17,7 @@ public class WorkerAnimator : MonoBehaviour
         animator = GetComponent<Animator>();
         workerBT = GetComponent<WorkerBT>();
         workersManager = FindObjectOfType<WorkersManager>();
-        constructionManager = FindObjectOfType<ConstructionManager>();
+        buildingManager = FindObjectOfType<BuildingManager>();
     }
 
     private void Update()
@@ -49,7 +49,7 @@ public class WorkerAnimator : MonoBehaviour
         }
 
         // Check if building is ready to be built
-        animator.SetBool("CanBuild", constructionManager.waitingList.Count > 0 && workersManager.buildingWorkers < 3 || workerBT.currentlyBuilding != null);
+        animator.SetBool("CanBuild", buildingManager.waitingForWorkers.Count > 0 && workersManager.buildingWorkers < 3 || workerBT.currentlyBuilding != null);
         if (!animator.GetBool("CanBuild"))
         {
             animator.SetBool("IsBuilding", false);

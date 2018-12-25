@@ -38,12 +38,11 @@ public class ResourceManager : MonoBehaviour {
     private float currentFood;          // Keep the exact food quantity as a float
     private int cultureCount;           // How many culture buildings are built
     private int cultureEfficiency = 20; // How much food each culture gives
-
-    private ConstructionManager constructionManager;
+    
     private BuildingManager buildingManager;
 
     void Start () {
-        #region resourcesSetup
+        #region Resources Setup
         // Get all resource texts //
         woodAvailable = GameObject.Find("currentWood").GetComponent<TextMeshProUGUI>();
         stoneAvailable = GameObject.Find("currentStone").GetComponent<TextMeshProUGUI>();
@@ -102,9 +101,9 @@ public class ResourceManager : MonoBehaviour {
         cultureCount = 0;
         if (buildingManager.constructedBuildings.Count > 0)
         {
-            foreach (PlaceableBuilding c in buildingManager.constructedBuildings)
+            foreach (Building building in buildingManager.constructedBuildings)
             {
-                if (c.gameObject.name.StartsWith("BuildingCulture") && c.isConstructed == true)
+                if (building.gameObject.name.StartsWith("Culture") && building.isConstructed == true)
                 {
                     cultureCount++;
                 }
@@ -116,7 +115,7 @@ public class ResourceManager : MonoBehaviour {
         workersConsumption = (baseConsumption * workerCount) - (cultureEfficiency * cultureCount) + (int)Mathf.Pow(workerCount, multiplier);
         resourcesConsumption[ResourceTypes.Food] = workersConsumption;
 
-
+        #region Text Updates
         woodAvailable.text = resourcesAvailable[ResourceTypes.Wood].ToString();
         stoneAvailable.text = resourcesAvailable[ResourceTypes.Stone].ToString();
         foodAvailable.text = resourcesAvailable[ResourceTypes.Food].ToString();
@@ -128,7 +127,7 @@ public class ResourceManager : MonoBehaviour {
         woodConsumption.text = Mathf.Floor(resourcesConsumption[ResourceTypes.Wood]).ToString();
         stoneConsumption.text = Mathf.Floor(resourcesConsumption[ResourceTypes.Stone]).ToString();
         foodConsumption.text = Mathf.Floor(resourcesConsumption[ResourceTypes.Food]).ToString();
-        
+        #endregion
     }
 
     public void AddResource(ResourceTypes resourceType, int resourceQuantity)

@@ -17,7 +17,7 @@ public class Forge : MonoBehaviour {
 
     private void Update()
     {
-        if(GetComponent<PlaceableBuilding>().isConstructed)
+        if(GetComponent<Building>().isConstructed)
         {
             unavailableText.SetActive(false);
             for (int i = 0; i < upgradeCount; i++)

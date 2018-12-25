@@ -11,7 +11,8 @@ public class MapGenerator : MonoBehaviour {
     private NavMeshSurface surface;
 
     [SerializeField] private int freeSpaceFromCenter = 10;
-    
+
+    public string resourcesLayerName;
     public Transform treePrefab;
     public int treeCount;
     public Transform bushPrefab;
@@ -90,6 +91,7 @@ public class MapGenerator : MonoBehaviour {
             Vector3 obstaclePosition = CoordToPosition(randomCoord.x, randomCoord.y);
             Transform newTree = Instantiate(treePrefab, obstaclePosition + Vector3.up * 0.75f, Quaternion.identity) as Transform;
             newTree.parent = mapHolder;
+            newTree.gameObject.layer = LayerMask.NameToLayer(resourcesLayerName);
         }
 
         // Berries
@@ -105,6 +107,7 @@ public class MapGenerator : MonoBehaviour {
             Vector3 obstaclePosition = CoordToPosition(randomCoord.x, randomCoord.y);
             Transform newBush = Instantiate(bushPrefab, obstaclePosition + Vector3.up * 0.5f, Quaternion.identity) as Transform;
             newBush.parent = mapHolder;
+            newBush.gameObject.layer = LayerMask.NameToLayer(resourcesLayerName);
         }
 
         // Rock
@@ -120,6 +123,7 @@ public class MapGenerator : MonoBehaviour {
             Vector3 obstaclePosition = CoordToPosition(randomCoord.x, randomCoord.y);
             Transform newRock = Instantiate(rockPrefab, obstaclePosition, Quaternion.identity) as Transform;
             newRock.parent = mapHolder;
+            newRock.gameObject.layer = LayerMask.NameToLayer(resourcesLayerName);
         }
 
         navmeshFloor.localScale = new Vector3(mapSize.x, mapSize.y, 1);

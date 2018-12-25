@@ -46,7 +46,7 @@ public class WorkerBT : MonoBehaviour {
     private StorageFinder storageFinder;
     private ResourceManager resourceManager;
     private WorkersManager workersManager;
-    private ConstructionManager constructionManager;
+    private BuildingManager buildingManager;
 
     // Hero/Enemy stuff
     private Transform hero;
@@ -69,7 +69,7 @@ public class WorkerBT : MonoBehaviour {
         resourceManager = FindObjectOfType<ResourceManager>();
         workersManager = FindObjectOfType<WorkersManager>();
         workersManager.workers.Add(this);
-        constructionManager = FindObjectOfType<ConstructionManager>();
+        buildingManager = FindObjectOfType<BuildingManager>();
 
         // Navigation
         agent = GetComponent<NavMeshAgent>();
@@ -381,9 +381,9 @@ public class WorkerBT : MonoBehaviour {
         {
             workersManager.buildingWorkers++;
         }
-        if (constructionManager.waitingList.Count > 0)
+        if (buildingManager.waitingForWorkers.Count > 0)
         {
-            currentlyBuilding = constructionManager.waitingList[0].transform;
+            currentlyBuilding = buildingManager.waitingForWorkers[0].transform;
         }
 
         pickaxe.SetActive(false);

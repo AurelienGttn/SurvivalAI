@@ -13,8 +13,11 @@ public class FollowCamera : MonoBehaviour {
         hero = GameObject.FindGameObjectWithTag("Player").transform;
 	}
 	
-	// Update is called once per frame
 	void LateUpdate () {
-        transform.position = hero.transform.position + offset;
+        // Check if the camer still has a targer
+        // ie. hero is alive
+        // Follow his position but keep the same offset
+        if (hero)
+            transform.position = hero.transform.position + offset;
 	}
 }

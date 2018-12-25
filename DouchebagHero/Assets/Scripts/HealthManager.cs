@@ -19,8 +19,11 @@ public class HealthManager : MonoBehaviour {
     {
         if (tag == "Building" || tag == "Warehouse")
             currentHealth = 1;
-        else 
+        else {
             currentHealth = maxHealth;
+            if (tag == "Player" || tag == "Worker")
+                StartCoroutine(RegenHealth());
+        }
         if (healthBar)
         {
             healthBar.maxValue = maxHealth;
@@ -30,6 +33,15 @@ public class HealthManager : MonoBehaviour {
         m_renderer = GetComponentsInChildren<Renderer>();
         resourceFinder = FindObjectOfType<ResourceFinder>();
 	}
+
+    private void Update()
+    {
+        //Regen over time
+        //if (tag != "Building" && tag != "Warehouse")
+        //{
+        //    Heal(0.05f);
+        //}
+    }
 
     public void TakeDamage(float damage)
     {
@@ -51,7 +63,7 @@ public class HealthManager : MonoBehaviour {
                     renderer.enabled = false;
                 }
                 Instantiate(deathAnimation, gameObject.transform);
-                Destroy(gameObject, deathAnimation.main.duration);
+                Destroy(gameObject, 0.7f);
             }
             isDead = true;
 
@@ -88,5 +100,14 @@ public class HealthManager : MonoBehaviour {
         {
             currentHealth = maxHealth;
         }
+    }
+
+    // Regen 4% health every second
+    private IEnumerator RegenHealth()
+    {
+        yield return new WaitForSeconds(1);
+
+        Heal(maxHealth * 0.04f);
+        StartCoroutine(RegenHealth());
     }
 }

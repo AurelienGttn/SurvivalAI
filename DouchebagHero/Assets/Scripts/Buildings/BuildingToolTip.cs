@@ -21,31 +21,31 @@ public class BuildingToolTip : MonoBehaviour {
     private void Start()
     {
         button = GetComponentInParent<Button>();
-        buildingManager = GameObject.Find("BuildingManager").GetComponent<BuildingManager>();
+        buildingManager = FindObjectOfType<BuildingManager>();
 
         if (button.name == "Forge")
         {
-            infos.text = buildingManager.buildingInfo[BuildingManager.BuildingTypes.Forge];
-            necessaryWood.text = buildingManager.necessaryWood[BuildingManager.BuildingTypes.Forge].ToString();
-            necessaryStone.text = buildingManager.necessaryStone[BuildingManager.BuildingTypes.Forge].ToString();
+            infos.text = buildingManager.buildingInfo[BuildingTypes.Forge];
+            necessaryWood.text = buildingManager.necessaryWood[BuildingTypes.Forge].ToString();
+            necessaryStone.text = buildingManager.necessaryStone[BuildingTypes.Forge].ToString();
         }
         else if (button.name == "Culture")
         {
-            infos.text = buildingManager.buildingInfo[BuildingManager.BuildingTypes.Culture];
-            necessaryWood.text = buildingManager.necessaryWood[BuildingManager.BuildingTypes.Culture].ToString();
-            necessaryStone.text = buildingManager.necessaryStone[BuildingManager.BuildingTypes.Culture].ToString();
+            infos.text = buildingManager.buildingInfo[BuildingTypes.Culture];
+            necessaryWood.text = buildingManager.necessaryWood[BuildingTypes.Culture].ToString();
+            necessaryStone.text = buildingManager.necessaryStone[BuildingTypes.Culture].ToString();
         }
-        else if (button.name == "Entrepot")
+        else if (button.name == "Warehouse")
         {
-            infos.text = buildingManager.buildingInfo[BuildingManager.BuildingTypes.Entrepot];
-            necessaryWood.text = buildingManager.necessaryWood[BuildingManager.BuildingTypes.Entrepot].ToString();
-            necessaryStone.text = buildingManager.necessaryStone[BuildingManager.BuildingTypes.Entrepot].ToString();
+            infos.text = buildingManager.buildingInfo[BuildingTypes.Warehouse];
+            necessaryWood.text = buildingManager.necessaryWood[BuildingTypes.Warehouse].ToString();
+            necessaryStone.text = buildingManager.necessaryStone[BuildingTypes.Warehouse].ToString();
         }
         else if (button.name == "Tower")
         {
-            infos.text = buildingManager.buildingInfo[BuildingManager.BuildingTypes.Tower];
-            necessaryWood.text = buildingManager.necessaryWood[BuildingManager.BuildingTypes.Tower].ToString();
-            necessaryStone.text = buildingManager.necessaryStone[BuildingManager.BuildingTypes.Tower].ToString();
+            infos.text = buildingManager.buildingInfo[BuildingTypes.Tower];
+            necessaryWood.text = buildingManager.necessaryWood[BuildingTypes.Tower].ToString();
+            necessaryStone.text = buildingManager.necessaryStone[BuildingTypes.Tower].ToString();
         }
     }
 }

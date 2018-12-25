@@ -216,6 +216,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4360457294551640}
   - component: {fileID: 95272786743351604}
+  - component: {fileID: 82278685344166022}
   m_Layer: 0
   m_Name: WeaponHolder
   m_TagString: Untagged
@@ -292,6 +293,7 @@ GameObject:
   - component: {fileID: 114133525619730944}
   - component: {fileID: 114045598371799226}
   - component: {fileID: 114054403545448828}
+  - component: {fileID: 114775201362507878}
   m_Layer: 9
   m_Name: Worker
   m_TagString: Worker
@@ -466,8 +468,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1785519770190304}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.3, y: 1, z: 2.3}
+  m_LocalRotation: {x: -0, y: 0.8327696, z: -0, w: 0.55361974}
+  m_LocalPosition: {x: 6.26, y: 1, z: 2.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224385982444462690}
@@ -604,7 +606,7 @@ MeshRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1970602672432126}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
@@ -952,6 +954,102 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!82 &82278685344166022
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1596367540520062}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 243059957920538592, guid: 6ba6d043682f1894f8a582330d364cd0,
+    type: 2}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 30
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!95 &95272786743351604
 Animator:
   serializedVersion: 3
@@ -1221,9 +1319,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae5ce37262745fc4f91290c0ba10486e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathAnimation: {fileID: 198330214428362902, guid: a97415c6b57076f41a6621a7b51d63a3,
+  deathAnimation: {fileID: 198275180760824952, guid: 6bde012b2c1e985438fd2c7f83240785,
     type: 2}
-  maxHealth: 5
+  maxHealth: 8
   currentHealth: 0
   healthBar: {fileID: 114520895748451570}
 --- !u!114 &114520895748451570
@@ -1286,6 +1384,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 0}
+--- !u!114 &114775201362507878
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1785519770190304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df43ee1d98a9f643ac9a8ee616aaa98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  axeSound: {fileID: 8300000, guid: 48612111f758a4e47b0889c6d0b00bef, type: 3}
+  pickaxeSound: {fileID: 8300000, guid: fe3c31be97b9f774da4a6603684008c7, type: 3}
+  hammerSound: {fileID: 8300000, guid: 48612111f758a4e47b0889c6d0b00bef, type: 3}
+  swordSound: {fileID: 0}
+  axe: {fileID: 1442334906389286}
+  pickaxe: {fileID: 1257749925320418}
+  hammer: {fileID: 1872292376962306}
 --- !u!135 &135887623587318876
 SphereCollider:
   m_ObjectHideFlags: 1

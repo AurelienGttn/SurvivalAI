@@ -77,6 +77,8 @@ public class GameController : MonoBehaviour
 
     public void Pause()
     {
+        if (!started)
+            return;
         if (pauseMenu.activeSelf)
         {
             Time.timeScale = 1;
